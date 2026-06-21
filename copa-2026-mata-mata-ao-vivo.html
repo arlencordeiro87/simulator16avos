@@ -1,0 +1,2509 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Mata-mata ao vivo — Copa 2026</title>
+    <style>
+      :root {
+        --bg: #07130f;
+        --bg2: #0a1c16;
+        --panel: #0d241c;
+        --panel2: #0f2c22;
+        --raise: #123528;
+        --line: #1b3a2d;
+        --line2: #27513f;
+        --ink: #eaf4ed;
+        --muted: #82a293;
+        --dim: #577567;
+        --grass: #33e07d;
+        --grass-d: #14904c;
+        --amber: #f7ba3e;
+        --amber-d: #9c6c12;
+        --gold: #ffd75e;
+        --gold-d: #c79a1f;
+        --red: #f05d5d;
+        --red-d: #7a2424;
+        --win: #74c4ff;
+        --run: #c5a6ff;
+        --thr: #f7ba3e;
+        --disp: "Archivo", "Helvetica Neue", Arial, sans-serif;
+        --num: ui-monospace, "SF Mono", "Roboto Mono", Menlo, monospace;
+        --body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background:
+          radial-gradient(
+            1200px 600px at 50% -12%,
+            #0f2c22 0%,
+            transparent 60%
+          ),
+          var(--bg);
+        color: var(--ink);
+        font-family: var(--body);
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.45;
+        padding: 0 0 70px;
+      }
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 14px;
+      }
+
+      header {
+        padding: 22px 0 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
+        font-family: var(--num);
+        font-size: 11.5px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .live {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--grass);
+        font-weight: 700;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--grass);
+        animation: pulse 1.8s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(51, 224, 125, 0.55);
+        }
+        70% {
+          box-shadow: 0 0 0 9px rgba(51, 224, 125, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(51, 224, 125, 0);
+        }
+      }
+      h1 {
+        font-family: var(--disp);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 0.98;
+        margin: 0.3em 0 0.12em;
+        font-size: clamp(28px, 6.6vw, 54px);
+        text-transform: uppercase;
+      }
+      h1 em {
+        font-style: normal;
+        color: var(--grass);
+      }
+      .sub {
+        color: var(--muted);
+        max-width: 64ch;
+        font-size: 14.5px;
+        margin: 0;
+      }
+      .sub b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .scn {
+        margin-top: 11px;
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 7px 14px;
+        align-items: center;
+        font-family: var(--num);
+        font-size: 11.5px;
+        color: var(--dim);
+      }
+      .scn b {
+        color: var(--amber);
+        letter-spacing: 0.05em;
+      }
+      .scn code {
+        color: var(--ink);
+        background: var(--panel2);
+        border: 1px solid var(--line);
+        padding: 2px 7px;
+        border-radius: 5px;
+        letter-spacing: 0.14em;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 15px 0 4px;
+        align-items: center;
+      }
+      .btn {
+        font-family: var(--disp);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        font-weight: 700;
+        font-size: 12.5px;
+        color: var(--ink);
+        background: var(--panel2);
+        border: 1px solid var(--line2);
+        padding: 9px 13px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.16s;
+        display: inline-flex;
+        gap: 7px;
+        align-items: center;
+      }
+      .btn:hover {
+        background: var(--raise);
+        border-color: var(--grass-d);
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn.primary {
+        background: linear-gradient(180deg, #1a4c34, #123528);
+        border-color: var(--grass-d);
+        color: #dffce9;
+      }
+      .btn .k {
+        font-family: var(--num);
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .hint {
+        color: var(--dim);
+        font-size: 12px;
+        font-family: var(--num);
+      }
+
+      .sec-h {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        margin: 24px 0 10px;
+      }
+      .sec-h h2 {
+        font-family: var(--disp);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        font-weight: 800;
+        font-size: 16px;
+        margin: 0;
+      }
+      .sec-h .meta {
+        font-family: var(--num);
+        font-size: 11px;
+        color: var(--dim);
+      }
+
+      /* ---------------- bracket tree ---------------- */
+      .scrollnote {
+        font-family: var(--num);
+        font-size: 10.5px;
+        color: var(--dim);
+        margin: 0 0 6px;
+        display: none;
+      }
+      .treewrap {
+        position: relative;
+      }
+      .tree {
+        position: relative;
+        display: flex;
+        gap: 22px;
+        height: 560px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 6px 2px 10px;
+        scrollbar-width: thin;
+      }
+      .tree::-webkit-scrollbar {
+        height: 8px;
+      }
+      .tree::-webkit-scrollbar-thumb {
+        background: var(--line2);
+        border-radius: 4px;
+      }
+      .col {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex: none;
+        width: 150px;
+      }
+      .col.center {
+        width: 172px;
+      }
+      .colbody {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+      .col.center .colbody {
+        justify-content: center;
+        gap: 12px;
+        align-items: center;
+      }
+      .rl {
+        font-family: var(--num);
+        font-size: 9px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--dim);
+        text-align: center;
+        height: 14px;
+        flex: none;
+      }
+      #wires {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .wire {
+        fill: none;
+        stroke: var(--line2);
+        stroke-width: 1.4;
+      }
+      .wire.on {
+        stroke: var(--grass-d);
+        stroke-width: 1.8;
+      }
+
+      .card {
+        position: relative;
+        z-index: 1;
+        background: linear-gradient(180deg, var(--panel), var(--bg2));
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 3px 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .card.k3 {
+        border-color: #3a3315;
+      }
+      .card .no {
+        position: absolute;
+        top: -7px;
+        left: 7px;
+        font-family: var(--num);
+        font-size: 8px;
+        color: var(--dim);
+        background: var(--bg2);
+        padding: 0 4px;
+        border-radius: 3px;
+        border: 1px solid var(--line);
+      }
+      .slot {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 3px;
+        min-height: 28px;
+        border-radius: 5px;
+        cursor: default;
+        perspective: 520px;
+      }
+      .slot + .slot {
+        border-top: 1px dashed var(--line);
+      }
+      .slot.pick {
+        cursor: pointer;
+      }
+      .slot.pick:hover {
+        background: var(--raise);
+      }
+      .slot.won {
+        background: rgba(51, 224, 125, 0.13);
+      }
+      .slot.won .code {
+        color: var(--grass);
+      }
+      .slot.lost {
+        opacity: 0.4;
+      }
+      .slot.tbd {
+        opacity: 0.6;
+      }
+      .seed {
+        font-family: var(--num);
+        font-size: 9px;
+        font-weight: 700;
+        width: 22px;
+        text-align: center;
+        border-radius: 3px;
+        padding: 1px 0;
+        flex: none;
+      }
+      .seed.w {
+        color: #06121b;
+        background: var(--win);
+      }
+      .seed.r {
+        color: #140a24;
+        background: var(--run);
+      }
+      .seed.t {
+        color: #1c1404;
+        background: var(--thr);
+      }
+      .flag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+        width: 20px;
+        line-height: 1;
+      }
+      .flag img {
+        width: 20px;
+        height: auto;
+        border-radius: 2px;
+        display: block;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+      }
+      .code {
+        font-family: var(--disp);
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        font-size: 14px;
+        flex: none;
+      }
+      .tbdlbl {
+        font-family: var(--num);
+        font-size: 10px;
+        color: var(--dim);
+      }
+      .cell {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+        min-width: 0;
+        transform-origin: center;
+      }
+      .cell.flip {
+        animation: flip 0.56s cubic-bezier(0.6, 0.05, 0.3, 1);
+      }
+      .cell.flip .code,
+      .cell.flip .flag {
+        color: #fff;
+      }
+      @keyframes flip {
+        0% {
+          transform: rotateX(0);
+        }
+        42% {
+          transform: rotateX(-89deg);
+          filter: blur(0.6px) brightness(1.7);
+        }
+        43% {
+          transform: rotateX(89deg);
+        }
+        100% {
+          transform: rotateX(0);
+          filter: none;
+        }
+      }
+      .card.bump {
+        box-shadow:
+          0 0 0 1px var(--amber-d),
+          0 0 20px -4px rgba(247, 186, 62, 0.5);
+      }
+
+      /* final + trophy */
+      .trophy {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+      .trophy svg {
+        width: 54px;
+        height: 54px;
+        filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+      }
+      .trophy.lit svg {
+        filter: drop-shadow(0 0 14px rgba(255, 215, 94, 0.75));
+      }
+      .champ {
+        font-family: var(--disp);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 10px;
+        color: var(--dim);
+        text-align: center;
+      }
+      .champ.on {
+        color: var(--gold);
+      }
+      .champ .who {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        justify-content: center;
+        margin-top: 3px;
+        font-size: 18px;
+        color: var(--ink);
+        font-weight: 800;
+      }
+      .card.final {
+        border-color: var(--gold-d);
+        background: linear-gradient(180deg, #1c1c10, #0e1410);
+      }
+      .card.final.done {
+        box-shadow:
+          0 0 0 1px var(--gold-d),
+          0 0 26px -6px rgba(255, 215, 94, 0.5);
+      }
+
+      /* ---------------- thirds race ---------------- */
+      .cols2 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      @media (min-width: 860px) {
+        .cols2 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .race {
+        background: linear-gradient(180deg, var(--panel), var(--bg2));
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 6px;
+      }
+      .tr {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 7px 8px;
+        border-radius: 8px;
+        transition: background 0.3s;
+      }
+      .tr .pos {
+        font-family: var(--num);
+        font-size: 11px;
+        color: var(--dim);
+        width: 18px;
+        text-align: right;
+        flex: none;
+      }
+      .tr .g {
+        font-family: var(--num);
+        font-size: 10px;
+        color: var(--muted);
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 1px 5px;
+        flex: none;
+      }
+      .tr .nm2 {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 13px;
+      }
+      .tr .fig {
+        font-family: var(--num);
+        font-size: 11px;
+        color: var(--muted);
+        flex: none;
+      }
+      .tr.in .code {
+        color: var(--grass);
+      }
+      .tr.out {
+        opacity: 0.55;
+      }
+      .tr.out .code {
+        color: var(--red);
+      }
+      .tr.justin {
+        background: rgba(51, 224, 125, 0.16);
+      }
+      .tr.justout {
+        background: rgba(240, 93, 93, 0.14);
+      }
+      .cut {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 7px 6px;
+        color: var(--amber);
+        font-family: var(--num);
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .cut::before,
+      .cut::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--amber-d) 0 7px,
+          transparent 7px 13px
+        );
+      }
+
+      /* ---------------- standings table ---------------- */
+      .stnd-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      @media (min-width: 680px) {
+        .stnd-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (min-width: 1060px) {
+        .stnd-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .stnd-box {
+        background: var(--bg2);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .stnd-hdr {
+        display: grid;
+        grid-template-columns: 14px 20px 1fr repeat(6, 24px);
+        align-items: center;
+        gap: 4px;
+        padding: 6px 8px 5px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel2);
+      }
+      .stnd-hdr b {
+        font-family: var(--disp);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        grid-column: 1 / 4;
+      }
+      .stnd-hdr span {
+        font-family: var(--num);
+        font-size: 9px;
+        color: var(--dim);
+        letter-spacing: 0.06em;
+        text-align: right;
+      }
+      .stnd-row {
+        display: grid;
+        grid-template-columns: 14px 20px 1fr repeat(6, 24px);
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        font-size: 11.5px;
+      }
+      .stnd-row + .stnd-row {
+        border-top: 1px solid var(--line);
+      }
+      .stnd-row.q1,
+      .stnd-row.q2 {
+        background: rgba(51, 224, 125, 0.07);
+      }
+      .stnd-row.q3 {
+        background: rgba(247, 186, 62, 0.06);
+      }
+      .stnd-pos {
+        font-family: var(--num);
+        font-size: 9.5px;
+        color: var(--dim);
+        text-align: right;
+      }
+      .stnd-nm {
+        font-family: var(--disp);
+        font-weight: 800;
+        font-size: 11.5px;
+        letter-spacing: 0.02em;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .stnd-num {
+        font-family: var(--num);
+        font-size: 11px;
+        color: var(--muted);
+        text-align: right;
+      }
+      .stnd-num.pts {
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .fixwrap {
+        max-height: 320px;
+        overflow-y: auto;
+        padding-right: 4px;
+        scrollbar-width: thin;
+      }
+      .fxday {
+        font-family: var(--num);
+        font-size: 10px;
+        color: var(--dim);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin: 8px 2px 5px;
+      }
+      .fx {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg2);
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 6px 9px;
+        margin-bottom: 6px;
+      }
+      .fx.done {
+        opacity: 0.55;
+      }
+      .fx .ft {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12.5px;
+      }
+      .fx .ft .mid {
+        color: var(--dim);
+        font-family: var(--num);
+        font-size: 10px;
+      }
+      .fx .fg {
+        font-family: var(--num);
+        font-size: 9.5px;
+        color: var(--dim);
+        flex: none;
+      }
+      .fx .fxt {
+        font-family: var(--num);
+        font-size: 9.5px;
+        color: var(--muted);
+        flex: none;
+        margin-left: auto;
+      }
+      /* score inputs */
+      .fxsc {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex: none;
+      }
+      .fxin {
+        width: 30px;
+        height: 26px;
+        text-align: center;
+        font-family: var(--num);
+        font-weight: 700;
+        font-size: 13px;
+        background: var(--panel2);
+        border: 1px solid var(--line2);
+        border-radius: 5px;
+        color: var(--ink);
+        padding: 0;
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+      .fxin::-webkit-outer-spin-button,
+      .fxin::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .fxin:focus {
+        outline: none;
+        border-color: var(--grass-d);
+      }
+      .fxin.filled {
+        background: rgba(51, 224, 125, 0.12);
+        border-color: var(--grass-d);
+      }
+      .fxsep {
+        font-family: var(--num);
+        font-size: 11px;
+        color: var(--dim);
+      }
+      /* live in-progress games */
+      .fx.live {
+        border-color: var(--grass-d);
+        background: rgba(51, 224, 125, 0.05);
+      }
+      .live-badge {
+        font-family: var(--disp);
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        color: var(--grass);
+        flex: none;
+        animation: livepulse 1.4s ease-in-out infinite;
+      }
+      @keyframes livepulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+      .fx .fxlv {
+        font-family: var(--num);
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--grass);
+        letter-spacing: 0.04em;
+        padding: 0 6px;
+        flex: none;
+      }
+
+      footer {
+        margin-top: 30px;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+        color: var(--dim);
+        font-size: 12px;
+        max-width: 80ch;
+      }
+      footer b {
+        color: var(--muted);
+      }
+      .note-h {
+        font-family: var(--disp);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 5px;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 8px 0 2px;
+        font-family: var(--num);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .legend i {
+        font-style: normal;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .sw {
+        width: 11px;
+        height: 11px;
+        border-radius: 3px;
+        display: inline-block;
+      }
+      @media (max-width: 680px) {
+        .scrollnote {
+          display: block;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .cell.flip {
+          animation: none;
+        }
+        .dot {
+          animation: none;
+        }
+      }
+      .notice {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        background: rgba(247, 186, 62, 0.12);
+        border: 1px solid var(--amber-d);
+        border-radius: 9px;
+        padding: 9px 14px;
+        margin: 10px 0 4px;
+        font-size: 13px;
+        color: var(--amber);
+      }
+      .notice.show {
+        display: flex;
+      }
+      .notice button {
+        font-family: var(--disp);
+        font-weight: 700;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #06120b;
+        background: var(--amber);
+        border: none;
+        border-radius: 6px;
+        padding: 5px 11px;
+        cursor: pointer;
+        flex: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="kicker">
+          <span class="live"><span class="dot"></span>AO VIVO</span>
+          <span>Copa do Mundo 2026 · 48 seleções</span>
+          <span id="clock"></span>
+        </div>
+        <h1>Mata-mata <em>se acabasse agora</em></h1>
+        <p class="sub">
+          A chave inteira — dos 16-avos ao troféu — montada com a
+          <b>classificação deste instante</b>. Cada resultado reembaralha os
+          cruzamentos e o painel <b>vira como um letreiro de aeroporto</b>.
+          Clique num time para fazê-lo avançar até a final.
+        </p>
+        <div class="scn">
+          <span
+            >Cenário dos 8 terceiros: <code id="combo">—</code>
+            <b id="combo-ix"></b
+          ></span>
+          <span id="combo-groups"></span>
+        </div>
+      </header>
+
+      <div class="controls">
+        <button class="btn primary" id="b-reset">↺ Voltar ao agora</button>
+        <button class="btn" id="b-chaos">
+          ⚡ Simular o resto <span class="k">jogos reais, aleatório</span>
+        </button>
+        <span class="hint" id="changed-hint"></span>
+      </div>
+      <div id="live-notice" class="notice">
+        <span>⚡ Novos resultados disponíveis</span>
+        <button id="b-apply-live">Atualizar para ao vivo</button>
+      </div>
+
+      <div class="sec-h">
+        <h2>Chaveamento</h2>
+        <span class="meta">16-avos → oitavas → quartas → semis → final</span>
+      </div>
+      <p class="scrollnote">
+        ← deslize na horizontal para ver os dois lados e a final →
+      </p>
+      <div class="treewrap">
+        <div class="tree" id="tree"><svg id="wires"></svg></div>
+      </div>
+      <div class="legend">
+        <i
+          ><span class="sw" style="background: var(--win)"></span>1º do grupo</i
+        >
+        <i
+          ><span class="sw" style="background: var(--run)"></span>2º do grupo</i
+        >
+        <i
+          ><span class="sw" style="background: var(--thr)"></span>3º (8
+          melhores)</i
+        >
+        <i
+          ><span
+            class="sw"
+            style="background: #1a2417; border: 1px solid #3a3315"
+          ></span
+          >jogo com 3º</i
+        >
+        <i>clique = avança</i>
+      </div>
+
+      <div class="cols2">
+        <div>
+          <div class="sec-h">
+            <h2>Corrida dos terceiros</h2>
+            <span class="meta">8 de 12 passam</span>
+          </div>
+          <div class="race" id="race"></div>
+        </div>
+        <div>
+          <div class="sec-h">
+            <h2>Jogos que faltam</h2>
+            <span class="meta">resolva → vira a chave</span>
+          </div>
+          <div class="fixwrap" id="fixtures"></div>
+        </div>
+      </div>
+
+      <div class="sec-h">
+        <h2>Classificação por grupo</h2>
+        <span class="meta">ao vivo + simulado</span>
+      </div>
+      <div class="stnd-grid" id="standings"></div>
+
+      <footer>
+        <div class="note-h">A régua</div>
+        Semeado com os <b>resultados reais das 48 seleções até 20/jun</b> —
+        incluindo <b>saldo de gols de verdade</b>, puxado da base aberta
+        openfootball (sem chave) e conferido contra a classificação oficial,
+        time a time. A alocação dos <b>8 melhores terceiros</b> segue a
+        <b>tabela oficial da FIFA (Anexo C, 495 combinações)</b>, e o esqueleto
+        da chave (jogos 73–88 e adiante) é o oficial. Ordenação por pontos →
+        saldo → gols; confronto direto e disciplina não estão modelados. Os
+        16-avos saem da classificação; das oitavas em diante, quem avança é a
+        sua escolha. <b>Atualização ao vivo ativa</b> — dados via ESPN API
+        (gratuita, sem chave), atualizados a cada 60 segundos; scores parciais
+        contam durante jogos em andamento.
+      </footer>
+    </div>
+
+    <script>
+      const DATA = {
+        groups: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+        teams: {
+          MEX: { name: "México", group: "A", flag: "🇲🇽" },
+          KOR: { name: "Coreia do Sul", group: "A", flag: "🇰🇷" },
+          CZE: { name: "Tchéquia", group: "A", flag: "🇨🇿" },
+          RSA: { name: "África do Sul", group: "A", flag: "🇿🇦" },
+          CAN: { name: "Canadá", group: "B", flag: "🇨🇦" },
+          SUI: { name: "Suíça", group: "B", flag: "🇨🇭" },
+          BIH: { name: "Bósnia", group: "B", flag: "🇧🇦" },
+          QAT: { name: "Catar", group: "B", flag: "🇶🇦" },
+          BRA: { name: "Brasil", group: "C", flag: "🇧🇷" },
+          MAR: { name: "Marrocos", group: "C", flag: "🇲🇦" },
+          SCO: { name: "Escócia", group: "C", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿" },
+          HTI: { name: "Haiti", group: "C", flag: "🇭🇹" },
+          USA: { name: "EUA", group: "D", flag: "🇺🇸" },
+          AUS: { name: "Austrália", group: "D", flag: "🇦🇺" },
+          PAR: { name: "Paraguai", group: "D", flag: "🇵🇾" },
+          TUR: { name: "Turquia", group: "D", flag: "🇹🇷" },
+          GER: { name: "Alemanha", group: "E", flag: "🇩🇪" },
+          CIV: { name: "Costa do Marfim", group: "E", flag: "🇨🇮" },
+          ECU: { name: "Equador", group: "E", flag: "🇪🇨" },
+          CUW: { name: "Curaçao", group: "E", flag: "🇨🇼" },
+          NED: { name: "Holanda", group: "F", flag: "🇳🇱" },
+          SWE: { name: "Suécia", group: "F", flag: "🇸🇪" },
+          JPN: { name: "Japão", group: "F", flag: "🇯🇵" },
+          TUN: { name: "Tunísia", group: "F", flag: "🇹🇳" },
+          NZL: { name: "Nova Zelândia", group: "G", flag: "🇳🇿" },
+          IRN: { name: "Irã", group: "G", flag: "🇮🇷" },
+          BEL: { name: "Bélgica", group: "G", flag: "🇧🇪" },
+          EGY: { name: "Egito", group: "G", flag: "🇪🇬" },
+          URU: { name: "Uruguai", group: "H", flag: "🇺🇾" },
+          KSA: { name: "Arábia Saudita", group: "H", flag: "🇸🇦" },
+          ESP: { name: "Espanha", group: "H", flag: "🇪🇸" },
+          CPV: { name: "Cabo Verde", group: "H", flag: "🇨🇻" },
+          NOR: { name: "Noruega", group: "I", flag: "🇳🇴" },
+          FRA: { name: "França", group: "I", flag: "🇫🇷" },
+          SEN: { name: "Senegal", group: "I", flag: "🇸🇳" },
+          IRQ: { name: "Iraque", group: "I", flag: "🇮🇶" },
+          ARG: { name: "Argentina", group: "J", flag: "🇦🇷" },
+          AUT: { name: "Áustria", group: "J", flag: "🇦🇹" },
+          JOR: { name: "Jordânia", group: "J", flag: "🇯🇴" },
+          DZA: { name: "Argélia", group: "J", flag: "🇩🇿" },
+          COL: { name: "Colômbia", group: "K", flag: "🇨🇴" },
+          COD: { name: "RD Congo", group: "K", flag: "🇨🇩" },
+          POR: { name: "Portugal", group: "K", flag: "🇵🇹" },
+          UZB: { name: "Uzbequistão", group: "K", flag: "🇺🇿" },
+          ENG: { name: "Inglaterra", group: "L", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+          GHA: { name: "Gana", group: "L", flag: "🇬🇭" },
+          PAN: { name: "Panamá", group: "L", flag: "🇵🇦" },
+          CRO: { name: "Croácia", group: "L", flag: "🇭🇷" },
+        },
+        seed: {
+          MEX: { w: 2, d: 0, l: 0, gf: 3, ga: 0 },
+          RSA: { w: 0, d: 1, l: 1, gf: 1, ga: 3 },
+          KOR: { w: 1, d: 0, l: 1, gf: 2, ga: 2 },
+          CZE: { w: 0, d: 1, l: 1, gf: 2, ga: 3 },
+          CAN: { w: 1, d: 1, l: 0, gf: 7, ga: 1 },
+          BIH: { w: 0, d: 1, l: 1, gf: 2, ga: 5 },
+          QAT: { w: 0, d: 1, l: 1, gf: 1, ga: 7 },
+          SUI: { w: 1, d: 1, l: 0, gf: 5, ga: 2 },
+          BRA: { w: 1, d: 1, l: 0, gf: 4, ga: 1 },
+          MAR: { w: 1, d: 1, l: 0, gf: 2, ga: 1 },
+          HTI: { w: 0, d: 0, l: 2, gf: 0, ga: 4 },
+          SCO: { w: 1, d: 0, l: 1, gf: 1, ga: 1 },
+          USA: { w: 2, d: 0, l: 0, gf: 6, ga: 1 },
+          PAR: { w: 1, d: 0, l: 1, gf: 2, ga: 4 },
+          AUS: { w: 1, d: 0, l: 1, gf: 2, ga: 2 },
+          TUR: { w: 0, d: 0, l: 2, gf: 0, ga: 3 },
+          GER: { w: 2, d: 0, l: 0, gf: 9, ga: 2 },
+          CUW: { w: 0, d: 0, l: 1, gf: 1, ga: 7 },
+          CIV: { w: 1, d: 0, l: 1, gf: 2, ga: 2 },
+          ECU: { w: 0, d: 0, l: 1, gf: 0, ga: 1 },
+          NED: { w: 1, d: 1, l: 0, gf: 7, ga: 3 },
+          JPN: { w: 0, d: 1, l: 0, gf: 2, ga: 2 },
+          SWE: { w: 1, d: 0, l: 1, gf: 6, ga: 6 },
+          TUN: { w: 0, d: 0, l: 1, gf: 1, ga: 5 },
+          BEL: { w: 0, d: 1, l: 0, gf: 1, ga: 1 },
+          EGY: { w: 0, d: 1, l: 0, gf: 1, ga: 1 },
+          IRN: { w: 0, d: 1, l: 0, gf: 2, ga: 2 },
+          NZL: { w: 0, d: 1, l: 0, gf: 2, ga: 2 },
+          ESP: { w: 0, d: 1, l: 0, gf: 0, ga: 0 },
+          CPV: { w: 0, d: 1, l: 0, gf: 0, ga: 0 },
+          KSA: { w: 0, d: 1, l: 0, gf: 1, ga: 1 },
+          URU: { w: 0, d: 1, l: 0, gf: 1, ga: 1 },
+          NOR: { w: 1, d: 0, l: 0, gf: 4, ga: 1 },
+          FRA: { w: 1, d: 0, l: 0, gf: 3, ga: 1 },
+          SEN: { w: 0, d: 0, l: 1, gf: 1, ga: 3 },
+          IRQ: { w: 0, d: 0, l: 1, gf: 1, ga: 4 },
+          ARG: { w: 1, d: 0, l: 0, gf: 3, ga: 0 },
+          AUT: { w: 1, d: 0, l: 0, gf: 3, ga: 1 },
+          JOR: { w: 0, d: 0, l: 1, gf: 1, ga: 3 },
+          DZA: { w: 0, d: 0, l: 1, gf: 0, ga: 3 },
+          COL: { w: 1, d: 0, l: 0, gf: 3, ga: 1 },
+          COD: { w: 0, d: 1, l: 0, gf: 1, ga: 1 },
+          POR: { w: 0, d: 1, l: 0, gf: 1, ga: 1 },
+          UZB: { w: 0, d: 0, l: 1, gf: 1, ga: 3 },
+          ENG: { w: 1, d: 0, l: 0, gf: 4, ga: 2 },
+          GHA: { w: 1, d: 0, l: 0, gf: 1, ga: 0 },
+          PAN: { w: 0, d: 0, l: 1, gf: 0, ga: 1 },
+          CRO: { w: 0, d: 0, l: 1, gf: 2, ga: 4 },
+        },
+        alloc: {
+          ABCDEFGH: "HGBCAFDE",
+          ABCDEFGI: "CGBDAFEI",
+          ABCDEFGJ: "CGBDAFEJ",
+          ABCDEFGK: "CGBDAFEK",
+          ABCDEFGL: "CGBDAFLE",
+          ABCDEFHI: "HEBCAFDI",
+          ABCDEFHJ: "HJBCAFDE",
+          ABCDEFHK: "HEBCAFDK",
+          ABCDEFHL: "HFBCADLE",
+          ABCDEFIJ: "CJBDAFEI",
+          ABCDEFIK: "CEBDAFIK",
+          ABCDEFIL: "CEBDAFLI",
+          ABCDEFJK: "CJBDAFEK",
+          ABCDEFJL: "CJBDAFLE",
+          ABCDEFKL: "CEBDAFLK",
+          ABCDEGHI: "HGBCADEI",
+          ABCDEGHJ: "HGBCADEJ",
+          ABCDEGHK: "HGBCADEK",
+          ABCDEGHL: "HGBCADLE",
+          ABCDEGIJ: "EGBCADIJ",
+          ABCDEGIK: "EGBCADIK",
+          ABCDEGIL: "EGBCADLI",
+          ABCDEGJK: "EGBCADJK",
+          ABCDEGJL: "EGBCADLJ",
+          ABCDEGKL: "EGBCADLK",
+          ABCDEHIJ: "HJBCADEI",
+          ABCDEHIK: "HEBCADIK",
+          ABCDEHIL: "HEBCADLI",
+          ABCDEHJK: "HJBCADEK",
+          ABCDEHJL: "HJBCADLE",
+          ABCDEHKL: "HEBCADLK",
+          ABCDEIJK: "EJBCADIK",
+          ABCDEIJL: "EJBCADLI",
+          ABCDEIKL: "EIBCADLK",
+          ABCDEJKL: "EJBCADLK",
+          ABCDFGHI: "HGBCAFDI",
+          ABCDFGHJ: "HGBCAFDJ",
+          ABCDFGHK: "HGBCAFDK",
+          ABCDFGHL: "CGBDAFLH",
+          ABCDFGIJ: "CGBDAFIJ",
+          ABCDFGIK: "CGBDAFIK",
+          ABCDFGIL: "CGBDAFLI",
+          ABCDFGJK: "CGBDAFJK",
+          ABCDFGJL: "CGBDAFLJ",
+          ABCDFGKL: "CGBDAFLK",
+          ABCDFHIJ: "HJBCAFDI",
+          ABCDFHIK: "HFBCADIK",
+          ABCDFHIL: "HFBCADLI",
+          ABCDFHJK: "HJBCAFDK",
+          ABCDFHJL: "CJBDAFLH",
+          ABCDFHKL: "HFBCADLK",
+          ABCDFIJK: "CJBDAFIK",
+          ABCDFIJL: "CJBDAFLI",
+          ABCDFIKL: "CIBDAFLK",
+          ABCDFJKL: "CJBDAFLK",
+          ABCDGHIJ: "HGBCADIJ",
+          ABCDGHIK: "HGBCADIK",
+          ABCDGHIL: "HGBCADLI",
+          ABCDGHJK: "HGBCADJK",
+          ABCDGHJL: "HGBCADLJ",
+          ABCDGHKL: "HGBCADLK",
+          ABCDGIJK: "CJBDAGIK",
+          ABCDGIJL: "CJBDAGLI",
+          ABCDGIKL: "IGBCADLK",
+          ABCDGJKL: "CJBDAGLK",
+          ABCDHIJK: "HJBCADIK",
+          ABCDHIJL: "HJBCADLI",
+          ABCDHIKL: "HIBCADLK",
+          ABCDHJKL: "HJBCADLK",
+          ABCDIJKL: "IJBCADLK",
+          ABCEFGHI: "HGBCAFEI",
+          ABCEFGHJ: "HGBCAFEJ",
+          ABCEFGHK: "HGBCAFEK",
+          ABCEFGHL: "HGBCAFLE",
+          ABCEFGIJ: "EGBCAFIJ",
+          ABCEFGIK: "EGBCAFIK",
+          ABCEFGIL: "EGBCAFLI",
+          ABCEFGJK: "EGBCAFJK",
+          ABCEFGJL: "EGBCAFLJ",
+          ABCEFGKL: "EGBCAFLK",
+          ABCEFHIJ: "HJBCAFEI",
+          ABCEFHIK: "HEBCAFIK",
+          ABCEFHIL: "HEBCAFLI",
+          ABCEFHJK: "HJBCAFEK",
+          ABCEFHJL: "HJBCAFLE",
+          ABCEFHKL: "HEBCAFLK",
+          ABCEFIJK: "EJBCAFIK",
+          ABCEFIJL: "EJBCAFLI",
+          ABCEFIKL: "EIBCAFLK",
+          ABCEFJKL: "EJBCAFLK",
+          ABCEGHIJ: "HJBCAGEI",
+          ABCEGHIK: "EGBCAHIK",
+          ABCEGHIL: "EGBCAHLI",
+          ABCEGHJK: "HJBCAGEK",
+          ABCEGHJL: "HJBCAGLE",
+          ABCEGHKL: "EGBCAHLK",
+          ABCEGIJK: "EJBCAGIK",
+          ABCEGIJL: "EJBCAGLI",
+          ABCEGIKL: "EGBAICLK",
+          ABCEGJKL: "EJBCAGLK",
+          ABCEHIJK: "EJBCAHIK",
+          ABCEHIJL: "EJBCAHLI",
+          ABCEHIKL: "EIBCAHLK",
+          ABCEHJKL: "EJBCAHLK",
+          ABCEIJKL: "EJBAICLK",
+          ABCFGHIJ: "HGBCAFIJ",
+          ABCFGHIK: "HGBCAFIK",
+          ABCFGHIL: "HGBCAFLI",
+          ABCFGHJK: "HGBCAFJK",
+          ABCFGHJL: "HGBCAFLJ",
+          ABCFGHKL: "HGBCAFLK",
+          ABCFGIJK: "CJBFAGIK",
+          ABCFGIJL: "CJBFAGLI",
+          ABCFGIKL: "IGBCAFLK",
+          ABCFGJKL: "CJBFAGLK",
+          ABCFHIJK: "HJBCAFIK",
+          ABCFHIJL: "HJBCAFLI",
+          ABCFHIKL: "HIBCAFLK",
+          ABCFHJKL: "HJBCAFLK",
+          ABCFIJKL: "IJBCAFLK",
+          ABCGHIJK: "HJBCAGIK",
+          ABCGHIJL: "HJBCAGLI",
+          ABCGHIKL: "IGBCAHLK",
+          ABCGHJKL: "HJBCAGLK",
+          ABCGIJKL: "IJBCAGLK",
+          ABCHIJKL: "IJBCAHLK",
+          ABDEFGHI: "HGBDAFEI",
+          ABDEFGHJ: "HGBDAFEJ",
+          ABDEFGHK: "HGBDAFEK",
+          ABDEFGHL: "HGBDAFLE",
+          ABDEFGIJ: "EGBDAFIJ",
+          ABDEFGIK: "EGBDAFIK",
+          ABDEFGIL: "EGBDAFLI",
+          ABDEFGJK: "EGBDAFJK",
+          ABDEFGJL: "EGBDAFLJ",
+          ABDEFGKL: "EGBDAFLK",
+          ABDEFHIJ: "HJBDAFEI",
+          ABDEFHIK: "HEBDAFIK",
+          ABDEFHIL: "HEBDAFLI",
+          ABDEFHJK: "HJBDAFEK",
+          ABDEFHJL: "HJBDAFLE",
+          ABDEFHKL: "HEBDAFLK",
+          ABDEFIJK: "EJBDAFIK",
+          ABDEFIJL: "EJBDAFLI",
+          ABDEFIKL: "EIBDAFLK",
+          ABDEFJKL: "EJBDAFLK",
+          ABDEGHIJ: "HJBDAGEI",
+          ABDEGHIK: "EGBDAHIK",
+          ABDEGHIL: "EGBDAHLI",
+          ABDEGHJK: "HJBDAGEK",
+          ABDEGHJL: "HJBDAGLE",
+          ABDEGHKL: "EGBDAHLK",
+          ABDEGIJK: "EJBDAGIK",
+          ABDEGIJL: "EJBDAGLI",
+          ABDEGIKL: "EGBAIDLK",
+          ABDEGJKL: "EJBDAGLK",
+          ABDEHIJK: "EJBDAHIK",
+          ABDEHIJL: "EJBDAHLI",
+          ABDEHIKL: "EIBDAHLK",
+          ABDEHJKL: "EJBDAHLK",
+          ABDEIJKL: "EJBAIDLK",
+          ABDFGHIJ: "HGBDAFIJ",
+          ABDFGHIK: "HGBDAFIK",
+          ABDFGHIL: "HGBDAFLI",
+          ABDFGHJK: "HGBDAFJK",
+          ABDFGHJL: "HGBDAFLJ",
+          ABDFGHKL: "HGBDAFLK",
+          ABDFGIJK: "FJBDAGIK",
+          ABDFGIJL: "FJBDAGLI",
+          ABDFGIKL: "IGBDAFLK",
+          ABDFGJKL: "FJBDAGLK",
+          ABDFHIJK: "HJBDAFIK",
+          ABDFHIJL: "HJBDAFLI",
+          ABDFHIKL: "HIBDAFLK",
+          ABDFHJKL: "HJBDAFLK",
+          ABDFIJKL: "IJBDAFLK",
+          ABDGHIJK: "HJBDAGIK",
+          ABDGHIJL: "HJBDAGLI",
+          ABDGHIKL: "IGBDAHLK",
+          ABDGHJKL: "HJBDAGLK",
+          ABDGIJKL: "IJBDAGLK",
+          ABDHIJKL: "IJBDAHLK",
+          ABEFGHIJ: "HJBFAGEI",
+          ABEFGHIK: "EGBFAHIK",
+          ABEFGHIL: "EGBFAHLI",
+          ABEFGHJK: "HJBFAGEK",
+          ABEFGHJL: "HJBFAGLE",
+          ABEFGHKL: "EGBFAHLK",
+          ABEFGIJK: "EJBFAGIK",
+          ABEFGIJL: "EJBFAGLI",
+          ABEFGIKL: "EGBAIFLK",
+          ABEFGJKL: "EJBFAGLK",
+          ABEFHIJK: "EJBFAHIK",
+          ABEFHIJL: "EJBFAHLI",
+          ABEFHIKL: "EIBFAHLK",
+          ABEFHJKL: "EJBFAHLK",
+          ABEFIJKL: "EJBAIFLK",
+          ABEGHIJK: "EJBAHGIK",
+          ABEGHIJL: "EJBAHGLI",
+          ABEGHIKL: "EGBAIHLK",
+          ABEGHJKL: "EJBAHGLK",
+          ABEGIJKL: "EJBAIGLK",
+          ABEHIJKL: "EJBAIHLK",
+          ABFGHIJK: "HJBFAGIK",
+          ABFGHIJL: "HJBFAGLI",
+          ABFGHIKL: "HGBAIFLK",
+          ABFGHJKL: "HJBFAGLK",
+          ABFGIJKL: "IJBFAGLK",
+          ABFHIJKL: "HJBAIFLK",
+          ABGHIJKL: "HJBAIGLK",
+          ACDEFGHI: "HGECAFDI",
+          ACDEFGHJ: "HGJCAFDE",
+          ACDEFGHK: "HGECAFDK",
+          ACDEFGHL: "HGFCADLE",
+          ACDEFGIJ: "CGJDAFEI",
+          ACDEFGIK: "CGEDAFIK",
+          ACDEFGIL: "CGEDAFLI",
+          ACDEFGJK: "CGJDAFEK",
+          ACDEFGJL: "CGJDAFLE",
+          ACDEFGKL: "CGEDAFLK",
+          ACDEFHIJ: "HJECAFDI",
+          ACDEFHIK: "HEFCADIK",
+          ACDEFHIL: "HEFCADLI",
+          ACDEFHJK: "HJECAFDK",
+          ACDEFHJL: "HJFCADLE",
+          ACDEFHKL: "HEFCADLK",
+          ACDEFIJK: "CJEDAFIK",
+          ACDEFIJL: "CJEDAFLI",
+          ACDEFIKL: "CEIDAFLK",
+          ACDEFJKL: "CJEDAFLK",
+          ACDEGHIJ: "HGJCADEI",
+          ACDEGHIK: "HGECADIK",
+          ACDEGHIL: "HGECADLI",
+          ACDEGHJK: "HGJCADEK",
+          ACDEGHJL: "HGJCADLE",
+          ACDEGHKL: "HGECADLK",
+          ACDEGIJK: "EGJCADIK",
+          ACDEGIJL: "EGJCADLI",
+          ACDEGIKL: "EGICADLK",
+          ACDEGJKL: "EGJCADLK",
+          ACDEHIJK: "HJECADIK",
+          ACDEHIJL: "HJECADLI",
+          ACDEHIKL: "HEICADLK",
+          ACDEHJKL: "HJECADLK",
+          ACDEIJKL: "EJICADLK",
+          ACDFGHIJ: "HGJCAFDI",
+          ACDFGHIK: "HGFCADIK",
+          ACDFGHIL: "HGFCADLI",
+          ACDFGHJK: "HGJCAFDK",
+          ACDFGHJL: "CGJDAFLH",
+          ACDFGHKL: "HGFCADLK",
+          ACDFGIJK: "CGJDAFIK",
+          ACDFGIJL: "CGJDAFLI",
+          ACDFGIKL: "CGIDAFLK",
+          ACDFGJKL: "CGJDAFLK",
+          ACDFHIJK: "HJFCADIK",
+          ACDFHIJL: "HJFCADLI",
+          ACDFHIKL: "HFICADLK",
+          ACDFHJKL: "HJFCADLK",
+          ACDFIJKL: "CJIDAFLK",
+          ACDGHIJK: "HGJCADIK",
+          ACDGHIJL: "HGJCADLI",
+          ACDGHIKL: "HGICADLK",
+          ACDGHJKL: "HGJCADLK",
+          ACDGIJKL: "IGJCADLK",
+          ACDHIJKL: "HJICADLK",
+          ACEFGHIJ: "HGJCAFEI",
+          ACEFGHIK: "HGECAFIK",
+          ACEFGHIL: "HGECAFLI",
+          ACEFGHJK: "HGJCAFEK",
+          ACEFGHJL: "HGJCAFLE",
+          ACEFGHKL: "HGECAFLK",
+          ACEFGIJK: "EGJCAFIK",
+          ACEFGIJL: "EGJCAFLI",
+          ACEFGIKL: "EGICAFLK",
+          ACEFGJKL: "EGJCAFLK",
+          ACEFHIJK: "HJECAFIK",
+          ACEFHIJL: "HJECAFLI",
+          ACEFHIKL: "HEICAFLK",
+          ACEFHJKL: "HJECAFLK",
+          ACEFIJKL: "EJICAFLK",
+          ACEGHIJK: "EGJCAHIK",
+          ACEGHIJL: "EGJCAHLI",
+          ACEGHIKL: "EGICAHLK",
+          ACEGHJKL: "EGJCAHLK",
+          ACEGIJKL: "EJICAGLK",
+          ACEHIJKL: "EJICAHLK",
+          ACFGHIJK: "HGJCAFIK",
+          ACFGHIJL: "HGJCAFLI",
+          ACFGHIKL: "HGICAFLK",
+          ACFGHJKL: "HGJCAFLK",
+          ACFGIJKL: "IGJCAFLK",
+          ACFHIJKL: "HJICAFLK",
+          ACGHIJKL: "HJICAGLK",
+          ADEFGHIJ: "HGJDAFEI",
+          ADEFGHIK: "HGEDAFIK",
+          ADEFGHIL: "HGEDAFLI",
+          ADEFGHJK: "HGJDAFEK",
+          ADEFGHJL: "HGJDAFLE",
+          ADEFGHKL: "HGEDAFLK",
+          ADEFGIJK: "EGJDAFIK",
+          ADEFGIJL: "EGJDAFLI",
+          ADEFGIKL: "EGIDAFLK",
+          ADEFGJKL: "EGJDAFLK",
+          ADEFHIJK: "HJEDAFIK",
+          ADEFHIJL: "HJEDAFLI",
+          ADEFHIKL: "HEIDAFLK",
+          ADEFHJKL: "HJEDAFLK",
+          ADEFIJKL: "EJIDAFLK",
+          ADEGHIJK: "EGJDAHIK",
+          ADEGHIJL: "EGJDAHLI",
+          ADEGHIKL: "EGIDAHLK",
+          ADEGHJKL: "EGJDAHLK",
+          ADEGIJKL: "EJIDAGLK",
+          ADEHIJKL: "EJIDAHLK",
+          ADFGHIJK: "HGJDAFIK",
+          ADFGHIJL: "HGJDAFLI",
+          ADFGHIKL: "HGIDAFLK",
+          ADFGHJKL: "HGJDAFLK",
+          ADFGIJKL: "IGJDAFLK",
+          ADFHIJKL: "HJIDAFLK",
+          ADGHIJKL: "HJIDAGLK",
+          AEFGHIJK: "EGJFAHIK",
+          AEFGHIJL: "EGJFAHLI",
+          AEFGHIKL: "EGIFAHLK",
+          AEFGHJKL: "EGJFAHLK",
+          AEFGIJKL: "EJIFAGLK",
+          AEFHIJKL: "EJIFAHLK",
+          AEGHIJKL: "EJIAHGLK",
+          AFGHIJKL: "HJIFAGLK",
+          BCDEFGHI: "CGBDHFEI",
+          BCDEFGHJ: "HGBCJFDE",
+          BCDEFGHK: "CGBDHFEK",
+          BCDEFGHL: "CGBDHFLE",
+          BCDEFGIJ: "CGBDJFEI",
+          BCDEFGIK: "CGBDEFIK",
+          BCDEFGIL: "CGBDEFLI",
+          BCDEFGJK: "CGBDJFEK",
+          BCDEFGJL: "CGBDJFLE",
+          BCDEFGKL: "CGBDEFLK",
+          BCDEFHIJ: "CJBDHFEI",
+          BCDEFHIK: "CEBDHFIK",
+          BCDEFHIL: "CEBDHFLI",
+          BCDEFHJK: "CJBDHFEK",
+          BCDEFHJL: "CJBDHFLE",
+          BCDEFHKL: "CEBDHFLK",
+          BCDEFIJK: "CJBDEFIK",
+          BCDEFIJL: "CJBDEFLI",
+          BCDEFIKL: "CEBDIFLK",
+          BCDEFJKL: "CJBDEFLK",
+          BCDEGHIJ: "HGBCJDEI",
+          BCDEGHIK: "EGBCHDIK",
+          BCDEGHIL: "EGBCHDLI",
+          BCDEGHJK: "HGBCJDEK",
+          BCDEGHJL: "HGBCJDLE",
+          BCDEGHKL: "EGBCHDLK",
+          BCDEGIJK: "EGBCJDIK",
+          BCDEGIJL: "EGBCJDLI",
+          BCDEGIKL: "EGBCIDLK",
+          BCDEGJKL: "EGBCJDLK",
+          BCDEHIJK: "EJBCHDIK",
+          BCDEHIJL: "EJBCHDLI",
+          BCDEHIKL: "EIBCHDLK",
+          BCDEHJKL: "EJBCHDLK",
+          BCDEIJKL: "EJBCIDLK",
+          BCDFGHIJ: "HGBCJFDI",
+          BCDFGHIK: "CGBDHFIK",
+          BCDFGHIL: "CGBDHFLI",
+          BCDFGHJK: "HGBCJFDK",
+          BCDFGHJL: "CGBDHFLJ",
+          BCDFGHKL: "CGBDHFLK",
+          BCDFGIJK: "CGBDJFIK",
+          BCDFGIJL: "CGBDJFLI",
+          BCDFGIKL: "CGBDIFLK",
+          BCDFGJKL: "CGBDJFLK",
+          BCDFHIJK: "CJBDHFIK",
+          BCDFHIJL: "CJBDHFLI",
+          BCDFHIKL: "CIBDHFLK",
+          BCDFHJKL: "CJBDHFLK",
+          BCDFIJKL: "CJBDIFLK",
+          BCDGHIJK: "HGBCJDIK",
+          BCDGHIJL: "HGBCJDLI",
+          BCDGHIKL: "HGBCIDLK",
+          BCDGHJKL: "HGBCJDLK",
+          BCDGIJKL: "IGBCJDLK",
+          BCDHIJKL: "HJBCIDLK",
+          BCEFGHIJ: "HGBCJFEI",
+          BCEFGHIK: "EGBCHFIK",
+          BCEFGHIL: "EGBCHFLI",
+          BCEFGHJK: "HGBCJFEK",
+          BCEFGHJL: "HGBCJFLE",
+          BCEFGHKL: "EGBCHFLK",
+          BCEFGIJK: "EGBCJFIK",
+          BCEFGIJL: "EGBCJFLI",
+          BCEFGIKL: "EGBCIFLK",
+          BCEFGJKL: "EGBCJFLK",
+          BCEFHIJK: "EJBCHFIK",
+          BCEFHIJL: "EJBCHFLI",
+          BCEFHIKL: "EIBCHFLK",
+          BCEFHJKL: "EJBCHFLK",
+          BCEFIJKL: "EJBCIFLK",
+          BCEGHIJK: "EJBCHGIK",
+          BCEGHIJL: "EJBCHGLI",
+          BCEGHIKL: "EGBCIHLK",
+          BCEGHJKL: "EJBCHGLK",
+          BCEGIJKL: "EJBCIGLK",
+          BCEHIJKL: "EJBCIHLK",
+          BCFGHIJK: "HGBCJFIK",
+          BCFGHIJL: "HGBCJFLI",
+          BCFGHIKL: "HGBCIFLK",
+          BCFGHJKL: "HGBCJFLK",
+          BCFGIJKL: "IGBCJFLK",
+          BCFHIJKL: "HJBCIFLK",
+          BCGHIJKL: "HJBCIGLK",
+          BDEFGHIJ: "HGBDJFEI",
+          BDEFGHIK: "EGBDHFIK",
+          BDEFGHIL: "EGBDHFLI",
+          BDEFGHJK: "HGBDJFEK",
+          BDEFGHJL: "HGBDJFLE",
+          BDEFGHKL: "EGBDHFLK",
+          BDEFGIJK: "EGBDJFIK",
+          BDEFGIJL: "EGBDJFLI",
+          BDEFGIKL: "EGBDIFLK",
+          BDEFGJKL: "EGBDJFLK",
+          BDEFHIJK: "EJBDHFIK",
+          BDEFHIJL: "EJBDHFLI",
+          BDEFHIKL: "EIBDHFLK",
+          BDEFHJKL: "EJBDHFLK",
+          BDEFIJKL: "EJBDIFLK",
+          BDEGHIJK: "EJBDHGIK",
+          BDEGHIJL: "EJBDHGLI",
+          BDEGHIKL: "EGBDIHLK",
+          BDEGHJKL: "EJBDHGLK",
+          BDEGIJKL: "EJBDIGLK",
+          BDEHIJKL: "EJBDIHLK",
+          BDFGHIJK: "HGBDJFIK",
+          BDFGHIJL: "HGBDJFLI",
+          BDFGHIKL: "HGBDIFLK",
+          BDFGHJKL: "HGBDJFLK",
+          BDFGIJKL: "IGBDJFLK",
+          BDFHIJKL: "HJBDIFLK",
+          BDGHIJKL: "HJBDIGLK",
+          BEFGHIJK: "EJBFHGIK",
+          BEFGHIJL: "EJBFHGLI",
+          BEFGHIKL: "EGBFIHLK",
+          BEFGHJKL: "EJBFHGLK",
+          BEFGIJKL: "EJBFIGLK",
+          BEFHIJKL: "EJBFIHLK",
+          BEGHIJKL: "EJIBHGLK",
+          BFGHIJKL: "HJBFIGLK",
+          CDEFGHIJ: "CGJDHFEI",
+          CDEFGHIK: "CGEDHFIK",
+          CDEFGHIL: "CGEDHFLI",
+          CDEFGHJK: "CGJDHFEK",
+          CDEFGHJL: "CGJDHFLE",
+          CDEFGHKL: "CGEDHFLK",
+          CDEFGIJK: "CGEDJFIK",
+          CDEFGIJL: "CGEDJFLI",
+          CDEFGIKL: "CGEDIFLK",
+          CDEFGJKL: "CGEDJFLK",
+          CDEFHIJK: "CJEDHFIK",
+          CDEFHIJL: "CJEDHFLI",
+          CDEFHIKL: "CEIDHFLK",
+          CDEFHJKL: "CJEDHFLK",
+          CDEFIJKL: "CJEDIFLK",
+          CDEGHIJK: "EGJCHDIK",
+          CDEGHIJL: "EGJCHDLI",
+          CDEGHIKL: "EGICHDLK",
+          CDEGHJKL: "EGJCHDLK",
+          CDEGIJKL: "EGICJDLK",
+          CDEHIJKL: "EJICHDLK",
+          CDFGHIJK: "CGJDHFIK",
+          CDFGHIJL: "CGJDHFLI",
+          CDFGHIKL: "CGIDHFLK",
+          CDFGHJKL: "CGJDHFLK",
+          CDFGIJKL: "CGIDJFLK",
+          CDFHIJKL: "CJIDHFLK",
+          CDGHIJKL: "HGICJDLK",
+          CEFGHIJK: "EGJCHFIK",
+          CEFGHIJL: "EGJCHFLI",
+          CEFGHIKL: "EGICHFLK",
+          CEFGHJKL: "EGJCHFLK",
+          CEFGIJKL: "EGICJFLK",
+          CEFHIJKL: "EJICHFLK",
+          CEGHIJKL: "EJICHGLK",
+          CFGHIJKL: "HGICJFLK",
+          DEFGHIJK: "EGJDHFIK",
+          DEFGHIJL: "EGJDHFLI",
+          DEFGHIKL: "EGIDHFLK",
+          DEFGHJKL: "EGJDHFLK",
+          DEFGIJKL: "EGIDJFLK",
+          DEFHIJKL: "EJIDHFLK",
+          DEGHIJKL: "EJIDHGLK",
+          DFGHIJKL: "HGIDJFLK",
+          EFGHIJKL: "EJIFHGLK",
+        },
+        skeleton: [
+          // lado L → alimenta SF #101 (W97 vs W98)
+          // L-R32-0+1 → R16 #89 (W74 vs W77) → QF #97 → SF #101
+          { no: 74, h: { t: "W", g: "E" }, a: { t: "3", col: 3 }, k3: 1 },
+          { no: 77, h: { t: "W", g: "I" }, a: { t: "3", col: 5 }, k3: 1 },
+          // L-R32-2+3 → R16 #90 (W73 vs W75) → QF #97
+          { no: 73, h: { t: "R", g: "A" }, a: { t: "R", g: "B" } },
+          { no: 75, h: { t: "W", g: "F" }, a: { t: "R", g: "C" } },
+          // L-R32-4+5 → R16 #93 (W83 vs W84) → QF #98 → SF #101
+          { no: 83, h: { t: "R", g: "K" }, a: { t: "R", g: "L" } },
+          { no: 84, h: { t: "W", g: "H" }, a: { t: "R", g: "J" } },
+          // L-R32-6+7 → R16 #94 (W81 vs W82) → QF #98
+          { no: 81, h: { t: "W", g: "D" }, a: { t: "3", col: 2 }, k3: 1 },
+          { no: 82, h: { t: "W", g: "G" }, a: { t: "3", col: 4 }, k3: 1 },
+          // lado R → alimenta SF #102 (W99 vs W100)
+          // R-R32-0+1 → R16 #91 (W76 vs W78) → QF #99 → SF #102
+          { no: 76, h: { t: "W", g: "C" }, a: { t: "R", g: "F" } },
+          { no: 78, h: { t: "R", g: "E" }, a: { t: "R", g: "I" } },
+          // R-R32-2+3 → R16 #92 (W79 vs W80) → QF #99
+          { no: 79, h: { t: "W", g: "A" }, a: { t: "3", col: 0 }, k3: 1 },
+          { no: 80, h: { t: "W", g: "L" }, a: { t: "3", col: 7 }, k3: 1 },
+          // R-R32-4+5 → R16 #95 (W86 vs W88) → QF #100 → SF #102
+          { no: 86, h: { t: "W", g: "J" }, a: { t: "R", g: "H" } },
+          { no: 88, h: { t: "R", g: "D" }, a: { t: "R", g: "G" } },
+          // R-R32-6+7 → R16 #96 (W85 vs W87) → QF #100
+          { no: 85, h: { t: "W", g: "B" }, a: { t: "3", col: 1 }, k3: 1 },
+          { no: 87, h: { t: "W", g: "K" }, a: { t: "3", col: 6 }, k3: 1 },
+        ],
+        liveGames: [],
+        fixtures: [
+          { h: "ECU", a: "CUW", g: "E", date: "2026-06-20", played: false },
+          { h: "TUN", a: "JPN", g: "F", date: "2026-06-20", played: false },
+          { h: "BEL", a: "IRN", g: "G", date: "2026-06-21", played: false },
+          { h: "NZL", a: "EGY", g: "G", date: "2026-06-21", played: false },
+          { h: "ESP", a: "KSA", g: "H", date: "2026-06-21", played: false },
+          { h: "URU", a: "CPV", g: "H", date: "2026-06-21", played: false },
+          { h: "FRA", a: "IRQ", g: "I", date: "2026-06-22", played: false },
+          { h: "NOR", a: "SEN", g: "I", date: "2026-06-22", played: false },
+          { h: "ARG", a: "AUT", g: "J", date: "2026-06-22", played: false },
+          { h: "JOR", a: "DZA", g: "J", date: "2026-06-22", played: false },
+          { h: "POR", a: "UZB", g: "K", date: "2026-06-23", played: false },
+          { h: "COL", a: "COD", g: "K", date: "2026-06-23", played: false },
+          { h: "ENG", a: "GHA", g: "L", date: "2026-06-23", played: false },
+          { h: "PAN", a: "CRO", g: "L", date: "2026-06-23", played: false },
+          { h: "CZE", a: "MEX", g: "A", date: "2026-06-24", played: false },
+          { h: "RSA", a: "KOR", g: "A", date: "2026-06-24", played: false },
+          { h: "SUI", a: "CAN", g: "B", date: "2026-06-24", played: false },
+          { h: "BIH", a: "QAT", g: "B", date: "2026-06-24", played: false },
+          { h: "SCO", a: "BRA", g: "C", date: "2026-06-24", played: false },
+          { h: "MAR", a: "HTI", g: "C", date: "2026-06-24", played: false },
+          { h: "TUR", a: "USA", g: "D", date: "2026-06-25", played: false },
+          { h: "PAR", a: "AUS", g: "D", date: "2026-06-25", played: false },
+          { h: "CUW", a: "CIV", g: "E", date: "2026-06-25", played: false },
+          { h: "ECU", a: "GER", g: "E", date: "2026-06-25", played: false },
+          { h: "JPN", a: "SWE", g: "F", date: "2026-06-25", played: false },
+          { h: "TUN", a: "NED", g: "F", date: "2026-06-25", played: false },
+          { h: "EGY", a: "IRN", g: "G", date: "2026-06-26", played: false },
+          { h: "NZL", a: "BEL", g: "G", date: "2026-06-26", played: false },
+          { h: "CPV", a: "KSA", g: "H", date: "2026-06-26", played: false },
+          { h: "URU", a: "ESP", g: "H", date: "2026-06-26", played: false },
+          { h: "NOR", a: "FRA", g: "I", date: "2026-06-26", played: false },
+          { h: "SEN", a: "IRQ", g: "I", date: "2026-06-26", played: false },
+          { h: "DZA", a: "AUT", g: "J", date: "2026-06-27", played: false },
+          { h: "JOR", a: "ARG", g: "J", date: "2026-06-27", played: false },
+          { h: "COL", a: "POR", g: "K", date: "2026-06-27", played: false },
+          { h: "COD", a: "UZB", g: "K", date: "2026-06-27", played: false },
+          { h: "PAN", a: "ENG", g: "L", date: "2026-06-27", played: false },
+          { h: "CRO", a: "GHA", g: "L", date: "2026-06-27", played: false },
+        ],
+      };
+      const $ = (s, e = document) => e.querySelector(s);
+      const ce = (t, c) => {
+        const e = document.createElement(t);
+        if (c) e.className = c;
+        return e;
+      };
+      /* ISO-2 codes for flagcdn.com (FIFA 3-letter → ISO 3166-1 alpha-2 lowercase) */
+      const FLAGS = {
+        MEX: "mx",
+        KOR: "kr",
+        CZE: "cz",
+        RSA: "za",
+        CAN: "ca",
+        SUI: "ch",
+        BIH: "ba",
+        QAT: "qa",
+        BRA: "br",
+        MAR: "ma",
+        SCO: "gb-sct",
+        HTI: "ht",
+        USA: "us",
+        AUS: "au",
+        PAR: "py",
+        TUR: "tr",
+        GER: "de",
+        CIV: "ci",
+        ECU: "ec",
+        CUW: "cw",
+        NED: "nl",
+        SWE: "se",
+        JPN: "jp",
+        TUN: "tn",
+        NZL: "nz",
+        IRN: "ir",
+        BEL: "be",
+        EGY: "eg",
+        URU: "uy",
+        KSA: "sa",
+        ESP: "es",
+        CPV: "cv",
+        NOR: "no",
+        FRA: "fr",
+        SEN: "sn",
+        IRQ: "iq",
+        ARG: "ar",
+        AUT: "at",
+        JOR: "jo",
+        DZA: "dz",
+        COL: "co",
+        COD: "cd",
+        POR: "pt",
+        UZB: "uz",
+        ENG: "gb-eng",
+        GHA: "gh",
+        PAN: "pa",
+        CRO: "hr",
+      };
+      const flag = (c) => {
+        const iso = FLAGS[c];
+        if (!iso) return "";
+        return `<img src="https://flagcdn.com/w20/${iso}.png" srcset="https://flagcdn.com/w40/${iso}.png 2x" alt="${c}" width="20" loading="lazy">`;
+      };
+      const RM =
+        window.matchMedia &&
+        matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+      /* ---- bracket graph (ported from FIFA/Wikipedia knockout wiring) ---- */
+      const ROUND_ORDER = ["R32", "R16", "QF", "SF"],
+        SIZES = { R32: 8, R16: 4, QF: 2, SF: 1 },
+        NEXTR = { R32: "R16", R16: "QF", QF: "SF", SF: "FINAL" };
+      const MATCHES = [];
+      for (const side of ["L", "R"])
+        for (const round of ROUND_ORDER)
+          for (let i = 0; i < SIZES[round]; i++) {
+            const id = `${side}-${round}-${i}`;
+            const next =
+              round === "SF"
+                ? { matchId: "FINAL", slot: side === "L" ? 0 : 1 }
+                : {
+                    matchId: `${side}-${NEXTR[round]}-${Math.floor(i / 2)}`,
+                    slot: i % 2,
+                  };
+            MATCHES.push({ id, round, side, next });
+          }
+      MATCHES.push({ id: "FINAL", round: "FINAL", side: null, next: null });
+      const MBY = {};
+      MATCHES.forEach((m) => (MBY[m.id] = m));
+      const FEED = {};
+      MATCHES.forEach((m) => (FEED[m.id] = [null, null]));
+      MATCHES.forEach((m) => {
+        if (m.next) FEED[m.next.matchId][m.next.slot] = m.id;
+      });
+      const R32_IDS = [
+        "L-R32-0",
+        "L-R32-1",
+        "L-R32-2",
+        "L-R32-3",
+        "L-R32-4",
+        "L-R32-5",
+        "L-R32-6",
+        "L-R32-7",
+        "R-R32-0",
+        "R-R32-1",
+        "R-R32-2",
+        "R-R32-3",
+        "R-R32-4",
+        "R-R32-5",
+        "R-R32-6",
+        "R-R32-7",
+      ];
+      const NO = {};
+      // R32: número oficial de cada jogo (conforme tabela FIFA)
+      R32_IDS.forEach((id, i) => (NO[id] = DATA.skeleton[i].no));
+      // R16: mapeamento explícito (não seqüencial entre lados L/R)
+      NO["L-R16-0"] = 89;
+      NO["L-R16-1"] = 90;
+      NO["L-R16-2"] = 93;
+      NO["L-R16-3"] = 94;
+      NO["R-R16-0"] = 91;
+      NO["R-R16-1"] = 92;
+      NO["R-R16-2"] = 95;
+      NO["R-R16-3"] = 96;
+      // QF
+      NO["L-QF-0"] = 97;
+      NO["L-QF-1"] = 98;
+      NO["R-QF-0"] = 99;
+      NO["R-QF-1"] = 100;
+      // SF
+      NO["L-SF-0"] = 101;
+      NO["R-SF-0"] = 102;
+      NO["FINAL"] = 104;
+
+      const ORD = ["1A", "1B", "1D", "1E", "1G", "1I", "1K", "1L"];
+      const ALLOC_KEYS = Object.keys(DATA.alloc).sort();
+
+      /* ---- ESPN feed transform ---- */
+      const ESPN_MAP = { DRC: "COD", SKO: "KOR", CUR: "CUW" };
+      function espnAbbr(a) {
+        return ESPN_MAP[a] || a;
+      }
+
+      function espnToFeed(allEvents) {
+        const seed = {};
+        for (const c in DATA.seed) seed[c] = { w: 0, d: 0, l: 0, gf: 0, ga: 0 };
+        const fixtures = [];
+        const liveGames = [];
+        for (const ev of allEvents) {
+          const comp = ev.competitions && ev.competitions[0];
+          if (!comp) continue;
+          const note = comp.altGameNote || "";
+          const gm = note.match(/Group ([A-L])/i);
+          if (!gm) continue;
+          const g = gm[1].toUpperCase();
+          const st = comp.status && comp.status.type;
+          if (!st) continue;
+          const comps = comp.competitors || [];
+          if (comps.length < 2) continue;
+          const hComp = comps.find((x) => x.homeAway === "home");
+          const aComp = comps.find((x) => x.homeAway === "away");
+          if (!hComp || !aComp) continue;
+          const ha = espnAbbr(hComp.team.abbreviation);
+          const aa = espnAbbr(aComp.team.abbreviation);
+          if (!seed[ha] || !seed[aa]) continue;
+          if (st.state === "post" || st.state === "in") {
+            const hs = parseInt(hComp.score || 0, 10);
+            const as_ = parseInt(aComp.score || 0, 10);
+            if (isNaN(hs) || isNaN(as_)) continue;
+            seed[ha].gf += hs;
+            seed[ha].ga += as_;
+            seed[aa].gf += as_;
+            seed[aa].ga += hs;
+            if (hs > as_) {
+              seed[ha].w++;
+              seed[aa].l++;
+            } else if (as_ > hs) {
+              seed[aa].w++;
+              seed[ha].l++;
+            } else {
+              seed[ha].d++;
+              seed[aa].d++;
+            }
+            if (st.state === "in") {
+              const dateStr = (ev.date || "").slice(0, 10);
+              liveGames.push({
+                h: ha,
+                a: aa,
+                g,
+                gh: hs,
+                ga: as_,
+                date: dateStr,
+              });
+            }
+          } else {
+            const dateStr = (ev.date || "").slice(0, 10);
+            fixtures.push({
+              h: ha,
+              a: aa,
+              g,
+              date: dateStr,
+              time: ev.date || null,
+              played: false,
+            });
+          }
+        }
+        fixtures.sort((p, q) => (p.date + p.g).localeCompare(q.date + q.g));
+        const stamp = JSON.stringify({ seed, fixtures, liveGames });
+        return { seed, fixtures, liveGames, stamp };
+      }
+
+      /* ---- state ---- */
+      let dirty = false,
+        pendingLive = null,
+        lastStamp = null;
+      let S = {},
+        picks = {},
+        fxState = {};
+      function reset() {
+        S = {};
+        for (const c in DATA.seed) S[c] = { ...DATA.seed[c] };
+        picks = {};
+        fxState = {};
+        dirty = false;
+      }
+      const pts = (c) => 3 * S[c].w + S[c].d,
+        gd = (c) => S[c].gf - S[c].ga,
+        pl = (c) => S[c].w + S[c].d + S[c].l;
+      function cmp(a, b) {
+        return (
+          pts(b) - pts(a) ||
+          gd(b) - gd(a) ||
+          S[b].gf - S[a].gf ||
+          (a < b ? -1 : 1)
+        );
+      }
+      const teamsOf = (g) =>
+        Object.keys(DATA.teams).filter((c) => DATA.teams[c].group === g);
+      const tableOf = (g) => teamsOf(g).sort(cmp);
+
+      function compute() {
+        const W = {},
+          R = {},
+          T = {};
+        for (const g of DATA.groups) {
+          const t = tableOf(g);
+          W[g] = t[0];
+          R[g] = t[1];
+          T[g] = t[2];
+        }
+        const thirds = DATA.groups.map((g) => ({ g, code: T[g] }));
+        thirds.sort((a, b) => cmp(a.code, b.code));
+        thirds.forEach((x, i) => (x.in = i < 8));
+        const qual = thirds
+          .filter((x) => x.in)
+          .map((x) => x.g)
+          .sort();
+        const key = qual.join("");
+        const assign = DATA.alloc[key];
+        const colGroup = {};
+        if (assign) ORD.forEach((c, i) => (colGroup[c] = assign[i]));
+        const r32 = {};
+        DATA.skeleton.forEach((m, i) => {
+          const id = R32_IDS[i];
+          const res = (sd) => {
+            if (sd.t === "W")
+              return { code: W[sd.g], seed: "1" + sd.g, cls: "w" };
+            if (sd.t === "R")
+              return { code: R[sd.g], seed: "2" + sd.g, cls: "r" };
+            const grp = colGroup[ORD[sd.col]];
+            return {
+              code: grp ? T[grp] : null,
+              seed: "3" + (grp || "?"),
+              cls: "t",
+            };
+          };
+          r32[id] = { h: res(m.h), a: res(m.a), k3: !!m.k3 };
+        });
+        return { W, R, T, thirds, key, qual, r32 };
+      }
+      let C = null;
+
+      /* competitors of a match: [{code,seed,cls}|null, ...] */
+      function comp(id) {
+        const m = MBY[id];
+        if (m.round === "R32") {
+          const x = C.r32[id];
+          return [x.h, x.a];
+        }
+        const f = FEED[id];
+        const g = (fid) =>
+          fid && picks[fid] ? { code: picks[fid], seed: "", cls: "adv" } : null;
+        return [g(f[0]), g(f[1])];
+      }
+      function setWinner(id, code) {
+        if (!code) return;
+        dirty = true;
+        if (picks[id] === code) {
+          delete picks[id];
+        } else {
+          picks[id] = code;
+        }
+        // clear everything downstream
+        let cur = MBY[id].next;
+        while (cur) {
+          delete picks[cur.matchId];
+          cur = MBY[cur.matchId].next;
+        }
+        render();
+      }
+
+      /* ---- render ---- */
+      let prevSlot = {},
+        prevThirdIn = {},
+        cardEl = {};
+      function render(opts = {}) {
+        C = compute();
+        $("#combo").textContent = C.key || "—";
+        $("#combo-ix").textContent =
+          C.key && DATA.alloc[C.key]
+            ? "#" + (ALLOC_KEYS.indexOf(C.key) + 1) + "/495"
+            : "";
+        $("#combo-groups").textContent = C.qual.length
+          ? "grupos " + C.qual.join("·")
+          : "";
+        renderTree(opts);
+        renderRace(opts);
+        if (!opts.noFx) renderFixtures();
+        renderStandings();
+        requestAnimationFrame(drawWires);
+      }
+
+      const COLS = [
+        { cls: "col", label: "16-avos", ids: R32_IDS.slice(0, 8) },
+        {
+          cls: "col",
+          label: "Oitavas",
+          ids: ["L-R16-0", "L-R16-1", "L-R16-2", "L-R16-3"],
+        },
+        { cls: "col", label: "Quartas", ids: ["L-QF-0", "L-QF-1"] },
+        { cls: "col", label: "Semi", ids: ["L-SF-0"] },
+        { cls: "col center", label: "Final", ids: ["FINAL"] },
+        { cls: "col", label: "Semi", ids: ["R-SF-0"] },
+        { cls: "col", label: "Quartas", ids: ["R-QF-0", "R-QF-1"] },
+        {
+          cls: "col",
+          label: "Oitavas",
+          ids: ["R-R16-0", "R-R16-1", "R-R16-2", "R-R16-3"],
+        },
+        { cls: "col", label: "16-avos", ids: R32_IDS.slice(8) },
+      ];
+      const TROPHY = `<svg viewBox="0 0 24 24" fill="none"><path d="M6 4h12v3a6 6 0 0 1-12 0V4Z" fill="#ffd75e" stroke="#c79a1f"/><path d="M6 5H4a2 2 0 0 0 0 4h2M18 5h2a2 2 0 0 1 0 4h-2" stroke="#c79a1f" fill="none"/><path d="M10 12.5h4l.5 3.5h-5l.5-3.5Z" fill="#ffd75e" stroke="#c79a1f"/><path d="M8 20h8M9 17h6v3H9z" fill="#caa53a" stroke="#c79a1f"/></svg>`;
+
+      function slotEl(id, d, slot) {
+        const el = ce("div", "slot");
+        if (!d || !d.code) {
+          el.classList.add("tbd");
+          const f = FEED[id][slot];
+          el.innerHTML = `<span class="tbdlbl">${f ? "Venc. " + NO[f] : "—"}</span>`;
+          return el;
+        }
+        const decided = picks[id];
+        if (decided) {
+          el.classList.add(decided === d.code ? "won" : "lost");
+        }
+        const cell = ce("div", "cell");
+        const seedHtml = d.seed
+          ? `<span class="seed ${d.cls}">${d.seed}</span>`
+          : "";
+        cell.innerHTML = `${seedHtml}<span class="flag">${flag(d.code)}</span><span class="code">${d.code}</span>`;
+        el.appendChild(cell);
+        el.classList.add("pick");
+        el.onclick = () => setWinner(id, d.code);
+        return { el, cell };
+      }
+
+      function renderTree(opts) {
+        const tree = $("#tree");
+        [...tree.querySelectorAll(".col")].forEach((n) => n.remove());
+        cardEl = {};
+        const newSlot = {};
+        let changed = 0;
+        for (const col of COLS) {
+          const cdiv = ce("div", col.cls);
+          const lab = ce("div", "rl");
+          lab.textContent = col.label;
+          cdiv.appendChild(lab);
+          const body = ce("div", "colbody");
+          if (col.cls.includes("center")) {
+            const tw = ce("div", "trophy" + (picks["FINAL"] ? " lit" : ""));
+            tw.innerHTML = TROPHY;
+            const ch = ce("div", "champ" + (picks["FINAL"] ? " on" : ""));
+            ch.innerHTML = picks["FINAL"]
+              ? `Campeão<div class="who"><span class="flag">${flag(picks["FINAL"])}</span>${picks["FINAL"]}</div>`
+              : "Troféu";
+            tw.appendChild(ch);
+            body.appendChild(tw);
+          }
+          for (const id of col.ids) {
+            const m = MBY[id];
+            const cs = comp(id);
+            const card = ce(
+              "div",
+              "card" +
+                (C.r32[id] && C.r32[id].k3 ? " k3" : "") +
+                (id === "FINAL"
+                  ? " final" + (picks["FINAL"] ? " done" : "")
+                  : ""),
+            );
+            if (NO[id]) card.innerHTML = `<span class="no">#${NO[id]}</span>`;
+            let bumped = false;
+            [0, 1].forEach((slot) => {
+              const d = cs[slot];
+              const out = slotEl(id, d, slot);
+              const el = out.el || out;
+              card.appendChild(el);
+              if (m.round === "R32") {
+                const sid = id + "-" + slot;
+                const code = d ? d.code : null;
+                newSlot[sid] = code;
+                if (
+                  !opts.first &&
+                  prevSlot[sid] !== undefined &&
+                  prevSlot[sid] !== code &&
+                  out.cell
+                ) {
+                  changed++;
+                  bumped = true;
+                  if (!RM) out.cell.classList.add("flip");
+                }
+              }
+            });
+            if (bumped && !RM) {
+              card.classList.add("bump");
+              setTimeout(() => card.classList.remove("bump"), 700);
+            }
+            cardEl[id] = card;
+            body.appendChild(card);
+          }
+          cdiv.appendChild(body);
+          tree.appendChild(cdiv);
+        }
+        if (!opts.first) {
+          prevSlot = newSlot;
+          $("#changed-hint").textContent = changed
+            ? `${changed} vaga(s) viraram nos 16-avos`
+            : "";
+          clearTimeout(window._ht);
+          window._ht = setTimeout(
+            () => ($("#changed-hint").textContent = ""),
+            2600,
+          );
+        } else {
+          prevSlot = newSlot;
+        }
+      }
+
+      function drawWires() {
+        const tree = $("#tree"),
+          svg = $("#wires");
+        svg.setAttribute("width", tree.scrollWidth);
+        svg.setAttribute("height", tree.scrollHeight);
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        const box = (el) => ({
+          l: el.offsetLeft,
+          t: el.offsetTop,
+          w: el.offsetWidth,
+          h: el.offsetHeight,
+        });
+        for (const m of MATCHES) {
+          if (m.round === "R32") continue;
+          const tgt = cardEl[m.id];
+          if (!tgt) continue;
+          const tb = box(tgt);
+          const tcx = tb.l + tb.w / 2,
+            tcy = tb.t + tb.h / 2;
+          FEED[m.id].forEach((fid) => {
+            if (!fid) return;
+            const fe = cardEl[fid];
+            if (!fe) return;
+            const fb = box(fe);
+            const fcx = fb.l + fb.w / 2,
+              fcy = fb.t + fb.h / 2;
+            let fx, tx;
+            if (fcx < tcx) {
+              fx = fb.l + fb.w;
+              tx = tb.l;
+            } else {
+              fx = fb.l;
+              tx = tb.l + tb.w;
+            }
+            const midx = (fx + tx) / 2;
+            const path = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "path",
+            );
+            path.setAttribute("d", `M${fx},${fcy} H${midx} V${tcy} H${tx}`);
+            path.setAttribute("class", "wire" + (picks[fid] ? " on" : ""));
+            svg.appendChild(path);
+          });
+        }
+      }
+      window.addEventListener("resize", () => requestAnimationFrame(drawWires));
+
+      function renderRace(opts) {
+        const host = $("#race");
+        const old = {};
+        if (!opts.first && !RM)
+          host
+            .querySelectorAll(".tr")
+            .forEach(
+              (el) => (old[el.dataset.code] = el.getBoundingClientRect().top),
+            );
+        host.innerHTML = "";
+        C.thirds.forEach((x, i) => {
+          if (i === 8) {
+            const cut = ce("div", "cut");
+            cut.textContent = "linha de corte · 8 passam";
+            host.appendChild(cut);
+          }
+          const tr = ce("div", "tr " + (x.in ? "in" : "out"));
+          tr.dataset.code = x.code;
+          const was = prevThirdIn[x.code];
+          if (!opts.first && was !== undefined && was !== x.in)
+            tr.classList.add(x.in ? "justin" : "justout");
+          tr.innerHTML =
+            `<span class="pos">${i + 1}</span><span class="g">${x.g}</span>` +
+            `<span class="flag">${flag(x.code)}</span>` +
+            `<span class="nm2"><span class="code" style="margin-right:6px">${x.code}</span>` +
+            `<span style="color:var(--muted)">${DATA.teams[x.code].name}</span></span>` +
+            `<span class="fig">${pts(x.code)}pt · ${gd(x.code) >= 0 ? "+" : ""}${gd(x.code)}</span>`;
+          host.appendChild(tr);
+        });
+        if (!opts.first && !RM)
+          host.querySelectorAll(".tr").forEach((el) => {
+            const o = old[el.dataset.code];
+            if (o === undefined) return;
+            const d = o - el.getBoundingClientRect().top;
+            if (Math.abs(d) > 1 && el.animate)
+              el.animate(
+                [{ transform: `translateY(${d}px)` }, { transform: "none" }],
+                { duration: 460, easing: "cubic-bezier(.5,.05,.2,1)" },
+              );
+          });
+        const ni = {};
+        C.thirds.forEach((x) => (ni[x.code] = x.in));
+        prevThirdIn = ni;
+      }
+
+      function renderStandings() {
+        const host = $("#standings");
+        host.innerHTML = "";
+        for (const g of DATA.groups) {
+          const tbl = tableOf(g);
+          const box = ce("div", "stnd-box");
+          // header
+          const hdr = ce("div", "stnd-hdr");
+          hdr.innerHTML = `<b>Grupo ${g}</b><span>Pts</span><span>J</span><span>V</span><span>E</span><span>D</span><span>SG</span>`;
+          box.appendChild(hdr);
+          tbl.forEach((code, i) => {
+            const cls = i === 0 ? "q1" : i === 1 ? "q2" : i === 2 ? "q3" : "";
+            const row = ce("div", "stnd-row" + (cls ? " " + cls : ""));
+            const { w, d, l, gf, ga } = S[code];
+            const p = 3 * w + d;
+            const saldo = gf - ga;
+            row.innerHTML =
+              `<span class="stnd-pos">${i + 1}</span>` +
+              `<span class="flag">${flag(code)}</span>` +
+              `<span class="stnd-nm">${code}</span>` +
+              `<span class="stnd-num pts">${p}</span>` +
+              `<span class="stnd-num">${w + d + l}</span>` +
+              `<span class="stnd-num">${w}</span>` +
+              `<span class="stnd-num">${d}</span>` +
+              `<span class="stnd-num">${l}</span>` +
+              `<span class="stnd-num">${saldo >= 0 ? "+" : ""}${saldo}</span>`;
+            box.appendChild(row);
+          });
+          host.appendChild(box);
+        }
+      }
+
+      function renderFixtures() {
+        const host = $("#fixtures");
+        host.innerHTML = "";
+
+        // ── jogos em andamento (ESPN ao vivo) ──
+        const lg = DATA.liveGames || [];
+        if (lg.length) {
+          const hdr = ce("div", "fxday");
+          hdr.innerHTML = '<span class="live-badge">● AO VIVO</span>';
+          host.appendChild(hdr);
+          lg.forEach((f) => {
+            const fx = ce("div", "fx live");
+            fx.innerHTML =
+              `<div class="ft">` +
+              `<span class="flag">${flag(f.h)}</span><span class="code">${f.h}</span>` +
+              `<span class="fxlv">${f.gh} – ${f.ga}</span>` +
+              `<span class="flag">${flag(f.a)}</span><span class="code">${f.a}</span>` +
+              `<span class="fg">${f.g}</span></div>` +
+              `<span class="live-badge">▶ LIVE</span>`;
+            host.appendChild(fx);
+          });
+        }
+
+        // ── jogos futuros (editáveis via placar) ──
+        let lastDay = "";
+        DATA.fixtures.forEach((f, ix) => {
+          if (f.date !== lastDay) {
+            lastDay = f.date;
+            const d = ce("div", "fxday");
+            d.textContent = fmtDay(f.date);
+            host.appendChild(d);
+          }
+          const st = fxState[ix];
+          const fx = ce("div", "fx" + (st ? " done" : ""));
+          fx.innerHTML =
+            `<div class="ft"><span class="flag">${flag(f.h)}</span>` +
+            `<span class="code">${f.h}</span><span class="mid">×</span>` +
+            `<span class="flag">${flag(f.a)}</span><span class="code">${f.a}</span>` +
+            `<span class="fg">${f.g}</span>` +
+            (f.time ? `<span class="fxt">${fmtTime(f.time)}</span>` : "") +
+            `</div>`;
+
+          // placar input
+          const sc = ce("div", "fxsc");
+          const ih = ce("input");
+          ih.type = "number";
+          ih.min = "0";
+          ih.max = "20";
+          ih.inputMode = "numeric";
+          ih.className = "fxin";
+          ih.placeholder = "–";
+          const sep = ce("span", "fxsep");
+          sep.textContent = "–";
+          const ia = ce("input");
+          ia.type = "number";
+          ia.min = "0";
+          ia.max = "20";
+          ia.inputMode = "numeric";
+          ia.className = "fxin";
+          ia.placeholder = "–";
+          if (st) {
+            ih.value = st.gh;
+            ih.classList.add("filled");
+            ia.value = st.ga;
+            ia.classList.add("filled");
+          }
+          const tryApply = () => {
+            const h = parseInt(ih.value, 10),
+              a = parseInt(ia.value, 10);
+            if (!isNaN(h) && !isNaN(a) && h >= 0 && a >= 0) {
+              applyFix(ix, h, a, true);
+              ih.classList.add("filled");
+              ia.classList.add("filled");
+            } else if (ih.value === "" && ia.value === "") {
+              applyFix(ix, null, null, true);
+              ih.classList.remove("filled");
+              ia.classList.remove("filled");
+            }
+          };
+          ih.addEventListener("input", tryApply);
+          ia.addEventListener("input", tryApply);
+          sc.appendChild(ih);
+          sc.appendChild(sep);
+          sc.appendChild(ia);
+          fx.appendChild(sc);
+          host.appendChild(fx);
+        });
+      }
+      function fmtDay(s) {
+        const [y, m, d] = s.split("-");
+        return `${d}/${m}`;
+      }
+      function fmtTime(t) {
+        if (!t) return "";
+        return new Date(t).toLocaleTimeString(navigator.language || "pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZoneName: "short",
+        });
+      }
+      // gh/ga: integer goals; pass null to clear
+      function applyFix(ix, gh, ga, noFx) {
+        const f = DATA.fixtures[ix],
+          prev = fxState[ix];
+        if (gh === null && !prev) return;
+        dirty = true;
+        if (prev) undoFix(f, prev);
+        if (gh === null) {
+          fxState[ix] = null;
+        } else {
+          doFix(f, gh, ga);
+          fxState[ix] = { gh, ga };
+        }
+        picks = {};
+        render({ noFx: !!noFx });
+      }
+      function doFix(f, gh, ga) {
+        S[f.h].gf += gh;
+        S[f.h].ga += ga;
+        S[f.a].gf += ga;
+        S[f.a].ga += gh;
+        if (gh > ga) {
+          S[f.h].w++;
+          S[f.a].l++;
+        } else if (ga > gh) {
+          S[f.a].w++;
+          S[f.h].l++;
+        } else {
+          S[f.h].d++;
+          S[f.a].d++;
+        }
+      }
+      function undoFix(f, prev) {
+        S[f.h].gf -= prev.gh;
+        S[f.h].ga -= prev.ga;
+        S[f.a].gf -= prev.ga;
+        S[f.a].ga -= prev.gh;
+        if (prev.gh > prev.ga) {
+          S[f.h].w--;
+          S[f.a].l--;
+        } else if (prev.ga > prev.gh) {
+          S[f.a].w--;
+          S[f.h].l--;
+        } else {
+          S[f.h].d--;
+          S[f.a].d--;
+        }
+      }
+
+      function chaos() {
+        dirty = true;
+        DATA.fixtures.forEach((f, ix) => {
+          if (fxState[ix]) undoFix(f, fxState[ix]);
+          const gh = Math.floor(Math.random() * 4);
+          const ga = Math.floor(Math.random() * 4);
+          doFix(f, gh, ga);
+          fxState[ix] = { gh, ga };
+        });
+        picks = {};
+        render();
+      }
+
+      /* ---- live polling (ESPN API) ---- */
+      const ESPN_SCOREBOARD =
+        "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
+      // Todos os 17 dias da fase de grupos (11–27/jun/2026)
+      const GROUP_DATES = [
+        "20260611",
+        "20260612",
+        "20260613",
+        "20260614",
+        "20260615",
+        "20260616",
+        "20260617",
+        "20260618",
+        "20260619",
+        "20260620",
+        "20260621",
+        "20260622",
+        "20260623",
+        "20260624",
+        "20260625",
+        "20260626",
+        "20260627",
+      ];
+
+      function showLiveNotice() {
+        $("#live-notice").classList.add("show");
+      }
+      function hideLiveNotice() {
+        $("#live-notice").classList.remove("show");
+        pendingLive = null;
+      }
+
+      function applyLive(live) {
+        DATA.seed = live.seed;
+        DATA.fixtures = live.fixtures;
+        DATA.liveGames = live.liveGames || [];
+        lastStamp = live.stamp;
+        $("#clock").textContent =
+          "ao vivo " +
+          new Date().toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+      }
+
+      async function pull() {
+        try {
+          const results = await Promise.all(
+            GROUP_DATES.map((d) =>
+              fetch(ESPN_SCOREBOARD + "?dates=" + d, { cache: "no-store" })
+                .then((r) => (r.ok ? r.json() : { events: [] }))
+                .catch(() => ({ events: [] })),
+            ),
+          );
+          const allEvents = results.flatMap((r) => r.events || []);
+          const live = espnToFeed(allEvents);
+          if (live.stamp === lastStamp) return; // nada mudou
+          if (dirty) {
+            pendingLive = live;
+            showLiveNotice();
+            return;
+          }
+          applyLive(live);
+          reset();
+          render();
+        } catch (e) {
+          /* falha silenciosa — app mantém último estado */
+        }
+      }
+
+      $("#b-apply-live").onclick = () => {
+        if (pendingLive) applyLive(pendingLive);
+        hideLiveNotice();
+        reset();
+        render({ first: true });
+        flashHint("atualizado ao vivo");
+      };
+      $("#b-reset").onclick = () => {
+        if (pendingLive) applyLive(pendingLive);
+        hideLiveNotice();
+        reset();
+        render({ first: true });
+        flashHint("voltou ao vivo");
+      };
+      $("#b-chaos").onclick = chaos;
+      function flashHint(t) {
+        $("#changed-hint").textContent = t;
+        clearTimeout(window._ht);
+        window._ht = setTimeout(
+          () => ($("#changed-hint").textContent = ""),
+          2200,
+        );
+      }
+      function clock() {
+        if (!lastStamp)
+          // fallback enquanto o primeiro pull não chegou
+          $("#clock").textContent =
+            "atualizado " +
+            new Date().toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+      }
+      clock();
+      setInterval(clock, 30000);
+
+      reset();
+      render({ first: true });
+      pull();
+      setInterval(pull, 60000);
+      setTimeout(drawWires, 60);
+    </script>
+  </body>
+</html>
