@@ -1788,7 +1788,13 @@
       const ALLOC_KEYS = Object.keys(DATA.alloc).sort();
 
       /* ---- ESPN feed transform ---- */
-      const ESPN_MAP = { DRC: "COD", SKO: "KOR", CUR: "CUW" };
+      const ESPN_MAP = {
+        DRC: "COD",
+        SKO: "KOR",
+        CUR: "CUW",
+        HAI: "HTI",
+        ALG: "DZA",
+      };
       function espnAbbr(a) {
         return ESPN_MAP[a] || a;
       }
