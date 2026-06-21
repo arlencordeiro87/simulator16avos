@@ -1,3 +1,9 @@
+<!--
+  Mata-mata ao vivo — Copa do Mundo 2026
+  Autor: Árlen Cordeiro (@arlen_cordeiro)
+  https://instagram.com/arlen_cordeiro
+  Junho 2026
+-->
 <!doctype html>
 <html lang="pt-BR">
   <head>
@@ -7,6 +13,18 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <title>Mata-mata ao vivo — Copa 2026</title>
+    <meta name="author" content="Árlen Cordeiro — @arlen_cordeiro" />
+    <meta property="og:title" content="Mata-mata ao vivo — Copa 2026" />
+    <meta
+      property="og:description"
+      content="Simulador dinâmico do mata-mata Copa 2026 com dados ao vivo."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://simulator16avos.pages.dev/" />
+    <meta
+      property="og:image"
+      content="https://simulator16avos.pages.dev/preview.png"
+    />
     <style>
       :root {
         --bg: #07130f;
@@ -253,6 +271,21 @@
       }
       .col.center {
         width: 172px;
+      }
+      .col.col-qf,
+      .col.col-sf,
+      .col.col-final {
+        overflow: hidden;
+        transition:
+          max-width 0.35s ease,
+          opacity 0.3s ease;
+      }
+      .col.col-qf.collapsed,
+      .col.col-sf.collapsed,
+      .col.col-final.collapsed {
+        max-width: 0;
+        opacity: 0;
+        pointer-events: none;
       }
       .colbody {
         flex: 1;
@@ -666,6 +699,19 @@
         color: var(--ink);
       }
 
+      .sim-cta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .sim-cta .btn {
+        font-size: 11.5px;
+        padding: 7px 11px;
+      }
       .fixwrap {
         max-height: 320px;
         overflow-y: auto;
@@ -781,6 +827,10 @@
         50% {
           opacity: 0.3;
         }
+      }
+      .live-badge.static {
+        animation: none;
+        opacity: 1;
       }
       .fx .fxlv {
         font-family: var(--num);
@@ -905,6 +955,9 @@
         <button class="btn" id="b-chaos">
           ⚡ Simular o resto <span class="k">jogos reais, aleatório</span>
         </button>
+        <button class="btn" id="b-toggle-ko" onclick="toggleBracket()">
+          + Quartas, semi e final
+        </button>
         <span class="hint" id="changed-hint"></span>
       </div>
       <div id="live-notice" class="notice">
@@ -956,6 +1009,13 @@
             <h2>Jogos que faltam</h2>
             <span class="meta">resolva → vira a chave</span>
           </div>
+          <p class="sim-cta">
+            Preencha o placar de cada jogo abaixo
+            <b>ou</b> simule os que faltam de uma vez →
+            <button class="btn primary" onclick="chaos()">
+              ⚡ Simular agora
+            </button>
+          </p>
           <div class="fixwrap" id="fixtures"></div>
         </div>
       </div>
@@ -973,12 +1033,15 @@
         openfootball (sem chave) e conferido contra a classificação oficial,
         time a time. A alocação dos <b>8 melhores terceiros</b> segue a
         <b>tabela oficial da FIFA (Anexo C, 495 combinações)</b>, e o esqueleto
-        da chave (jogos 73–88 e adiante) é o oficial. Ordenação por pontos →
-        saldo → gols; confronto direto e disciplina não estão modelados. Os
-        16-avos saem da classificação; das oitavas em diante, quem avança é a
-        sua escolha. <b>Atualização ao vivo ativa</b> — dados via ESPN API
-        (gratuita, sem chave), atualizados a cada 60 segundos; scores parciais
-        contam durante jogos em andamento.
+        da chave (jogos 73–88 e adiante) é o oficial. Desempate segue o
+        <b>artigo 13 do regulamento FIFA 2026</b>: pontos → confronto direto
+        (pontos, saldo e gols só entre os times empatados) → saldo geral →
+        gols geral do grupo; fair play e ranking FIFA não estão modelados
+        (desempate final cai para ordem alfabética). Os 16-avos saem da
+        classificação; das oitavas em diante, quem avança é a sua escolha.
+        <b>Atualização ao vivo ativa</b> — dados via ESPN API (gratuita, sem
+        chave), atualizados a cada 60 segundos; scores parciais contam
+        durante jogos em andamento.
       </footer>
     </div>
 
@@ -1611,6 +1674,7 @@
           { no: 87, h: { t: "W", g: "K" }, a: { t: "3", col: 6 }, k3: 1 },
         ],
         liveGames: [],
+        playedMatches: [],
         fixtures: [
           { h: "ECU", a: "CUW", g: "E", date: "2026-06-20", played: false },
           { h: "TUN", a: "JPN", g: "F", date: "2026-06-20", played: false },
@@ -1804,6 +1868,7 @@
         for (const c in DATA.seed) seed[c] = { w: 0, d: 0, l: 0, gf: 0, ga: 0 };
         const fixtures = [];
         const liveGames = [];
+        const playedMatches = [];
         for (const ev of allEvents) {
           const comp = ev.competitions && ev.competitions[0];
           if (!comp) continue;
@@ -1811,7 +1876,8 @@
           const gm = note.match(/Group ([A-L])/i);
           if (!gm) continue;
           const g = gm[1].toUpperCase();
-          const st = comp.status && comp.status.type;
+          const status = comp.status;
+          const st = status && status.type;
           if (!st) continue;
           const comps = comp.competitors || [];
           if (comps.length < 2) continue;
@@ -1839,6 +1905,7 @@
               seed[ha].d++;
               seed[aa].d++;
             }
+            playedMatches.push({ h: ha, a: aa, g, gh: hs, ga: as_ });
             if (st.state === "in") {
               const dateStr = (ev.date || "").slice(0, 10);
               liveGames.push({
@@ -1848,6 +1915,9 @@
                 gh: hs,
                 ga: as_,
                 date: dateStr,
+                clock: status.displayClock || null,
+                period: status.period || null,
+                halftime: st.name === "STATUS_HALFTIME",
               });
             }
           } else {
@@ -1862,9 +1932,13 @@
             });
           }
         }
-        fixtures.sort((p, q) => (p.date + p.g).localeCompare(q.date + q.g));
+        fixtures.sort((p, q) => {
+          const tp = p.time ? Date.parse(p.time) : Date.parse(p.date);
+          const tq = q.time ? Date.parse(q.time) : Date.parse(q.date);
+          return tp - tq;
+        });
         const stamp = JSON.stringify({ seed, fixtures, liveGames });
-        return { seed, fixtures, liveGames, stamp };
+        return { seed, fixtures, liveGames, playedMatches, stamp };
       }
 
       /* ---- state ---- */
@@ -1884,6 +1958,8 @@
       const pts = (c) => 3 * S[c].w + S[c].d,
         gd = (c) => S[c].gf - S[c].ga,
         pl = (c) => S[c].w + S[c].d + S[c].l;
+      /* usada apenas para a corrida dos 8 melhores terceiros (times de grupos
+         diferentes nunca se enfrentam, então não há confronto direto a aplicar) */
       function cmp(a, b) {
         return (
           pts(b) - pts(a) ||
@@ -1894,7 +1970,80 @@
       }
       const teamsOf = (g) =>
         Object.keys(DATA.teams).filter((c) => DATA.teams[c].group === g);
-      const tableOf = (g) => teamsOf(g).sort(cmp);
+
+      /* todos os jogos já com placar (reais via ESPN + simulados/editados pendentes) */
+      function allMatches() {
+        const list = (DATA.playedMatches || []).slice();
+        DATA.fixtures.forEach((f, ix) => {
+          const st = fxState[ix];
+          if (st) list.push({ h: f.h, a: f.a, g: f.g, gh: st.gh, ga: st.ga });
+        });
+        return list;
+      }
+      /* pontos/saldo/gols apenas nos jogos entre os times de "codes" */
+      function h2hStats(codes, matches) {
+        const set = new Set(codes),
+          h = {};
+        codes.forEach((c) => (h[c] = { pts: 0, gf: 0, ga: 0 }));
+        matches.forEach((m) => {
+          if (!set.has(m.h) || !set.has(m.a)) return;
+          h[m.h].gf += m.gh;
+          h[m.h].ga += m.ga;
+          h[m.a].gf += m.ga;
+          h[m.a].ga += m.gh;
+          if (m.gh > m.ga) h[m.h].pts += 3;
+          else if (m.ga > m.gh) h[m.a].pts += 3;
+          else {
+            h[m.h].pts += 1;
+            h[m.a].pts += 1;
+          }
+        });
+        return h;
+      }
+      const sameH2H = (x, y) =>
+        x.pts === y.pts && x.gf - x.ga === y.gf - y.ga && x.gf === y.gf;
+      /* passo 2 do art. 13: saldo geral → gols geral → fair play (sem dado) →
+         ranking FIFA (sem dado) → ordem alfabética como desempate final estável */
+      function generalResolve(codes) {
+        return codes
+          .slice()
+          .sort(
+            (a, b) => gd(b) - gd(a) || S[b].gf - S[a].gf || (a < b ? -1 : 1),
+          );
+      }
+      /* passo 1 do art. 13: confronto direto entre os empatados em pontos.
+         Se reduzir o nó (mas não zerar o empate), reaplica-se recursivamente
+         só ao subgrupo que continua empatado — conforme o "edge case" do briefing. */
+      function resolveTies(codes, matches) {
+        if (codes.length <= 1) return codes;
+        const h = h2hStats(codes, matches);
+        const sorted = codes
+          .slice()
+          .sort(
+            (a, b) =>
+              h[b].pts - h[a].pts ||
+              h[b].gf - h[b].ga - (h[a].gf - h[a].ga) ||
+              h[b].gf - h[a].gf,
+          );
+        const buckets = [[sorted[0]]];
+        for (let i = 1; i < sorted.length; i++) {
+          if (sameH2H(h[sorted[i - 1]], h[sorted[i]]))
+            buckets[buckets.length - 1].push(sorted[i]);
+          else buckets.push([sorted[i]]);
+        }
+        if (buckets.length === 1) return generalResolve(codes); // confronto direto não distinguiu ninguém
+        return buckets.flatMap((b) => resolveTies(b, matches));
+      }
+      function tableOf(g) {
+        const teams = teamsOf(g);
+        const byPts = {};
+        teams.forEach((c) => (byPts[pts(c)] = byPts[pts(c)] || []).push(c));
+        const matches = allMatches();
+        return Object.keys(byPts)
+          .map(Number)
+          .sort((a, b) => b - a)
+          .flatMap((p) => resolveTies(byPts[p], matches));
+      }
 
       function compute() {
         const W = {},
@@ -1937,6 +2086,33 @@
         return { W, R, T, thirds, key, qual, r32 };
       }
       let C = null;
+
+      /* ---- colapso de quartas/semis/final (oitavas+16avos sempre visíveis) ---- */
+      let bracketExpanded = false;
+      function updateToggleIcon() {
+        const btn = $("#b-toggle-ko");
+        if (!btn) return;
+        btn.textContent = bracketExpanded
+          ? "− Ocultar quartas/semi/final"
+          : "+ Quartas, semi e final";
+      }
+      function setBracketExpanded(v, opts = {}) {
+        bracketExpanded = v;
+        updateToggleIcon();
+        if (!opts.skipRender) {
+          renderTree({});
+          requestAnimationFrame(drawWires);
+        }
+      }
+      function expandBracket(opts) {
+        setBracketExpanded(true, opts);
+      }
+      function collapseBracket(opts) {
+        setBracketExpanded(false, opts);
+      }
+      function toggleBracket() {
+        setBracketExpanded(!bracketExpanded);
+      }
 
       /* competitors of a match: [{code,seed,cls}|null, ...] */
       function comp(id) {
@@ -1995,11 +2171,11 @@
           label: "Oitavas",
           ids: ["L-R16-0", "L-R16-1", "L-R16-2", "L-R16-3"],
         },
-        { cls: "col", label: "Quartas", ids: ["L-QF-0", "L-QF-1"] },
-        { cls: "col", label: "Semi", ids: ["L-SF-0"] },
-        { cls: "col center", label: "Final", ids: ["FINAL"] },
-        { cls: "col", label: "Semi", ids: ["R-SF-0"] },
-        { cls: "col", label: "Quartas", ids: ["R-QF-0", "R-QF-1"] },
+        { cls: "col col-qf", label: "Quartas", ids: ["L-QF-0", "L-QF-1"] },
+        { cls: "col col-sf", label: "Semi", ids: ["L-SF-0"] },
+        { cls: "col center col-final", label: "Final", ids: ["FINAL"] },
+        { cls: "col col-sf", label: "Semi", ids: ["R-SF-0"] },
+        { cls: "col col-qf", label: "Quartas", ids: ["R-QF-0", "R-QF-1"] },
         {
           cls: "col",
           label: "Oitavas",
@@ -2039,7 +2215,11 @@
         const newSlot = {};
         let changed = 0;
         for (const col of COLS) {
-          const cdiv = ce("div", col.cls);
+          const isKO = /col-(qf|sf|final)/.test(col.cls);
+          const cdiv = ce(
+            "div",
+            col.cls + (isKO && !bracketExpanded ? " collapsed" : ""),
+          );
           const lab = ce("div", "rl");
           lab.textContent = col.label;
           cdiv.appendChild(lab);
@@ -2249,13 +2429,19 @@
           host.appendChild(hdr);
           lg.forEach((f) => {
             const fx = ce("div", "fx live");
+            const badgeTxt = f.halftime
+              ? "● HT"
+              : f.clock
+                ? `● ${f.clock}`
+                : "▶ LIVE";
+            const badgeCls = "live-badge" + (f.halftime ? " static" : "");
             fx.innerHTML =
               `<div class="ft">` +
               `<span class="flag">${flag(f.h)}</span><span class="code">${f.h}</span>` +
               `<span class="fxlv">${f.gh} – ${f.ga}</span>` +
               `<span class="flag">${flag(f.a)}</span><span class="code">${f.a}</span>` +
               `<span class="fg">${f.g}</span></div>` +
-              `<span class="live-badge">▶ LIVE</span>`;
+              `<span class="${badgeCls}">${badgeTxt}</span>`;
             host.appendChild(fx);
           });
         }
@@ -2348,7 +2534,7 @@
           fxState[ix] = null;
         } else {
           doFix(f, gh, ga);
-          fxState[ix] = { gh, ga };
+          fxState[ix] = { gh, ga, manual: true };
         }
         picks = {};
         render({ noFx: !!noFx });
@@ -2386,17 +2572,41 @@
         }
       }
 
+      /* distribuição de gols por placar (mais peso em placares baixos) */
+      function simGoals() {
+        const w = [0.35, 0.3, 0.2, 0.1, 0.05];
+        let x = Math.random(),
+          acc = 0;
+        for (let i = 0; i < w.length; i++) {
+          acc += w[i];
+          if (x < acc) return i;
+        }
+        return w.length - 1;
+      }
+      /* resultado ponderado: vitória A 38% · empate 26% · vitória B 36% (seção 2.3 do briefing) */
+      function simResult() {
+        const r = Math.random();
+        const outcome = r < 0.38 ? "h" : r < 0.64 ? "d" : "a";
+        let gh = simGoals(),
+          ga = simGoals();
+        if (outcome === "h" && gh <= ga) gh = ga + 1;
+        else if (outcome === "a" && ga <= gh) ga = gh + 1;
+        else if (outcome === "d" && gh !== ga) ga = gh;
+        return [gh, ga];
+      }
+      /* simula só os jogos sem placar manual — preserva o que o usuário já preencheu */
       function chaos() {
         dirty = true;
         DATA.fixtures.forEach((f, ix) => {
+          if (fxState[ix] && fxState[ix].manual) return;
           if (fxState[ix]) undoFix(f, fxState[ix]);
-          const gh = Math.floor(Math.random() * 4);
-          const ga = Math.floor(Math.random() * 4);
+          const [gh, ga] = simResult();
           doFix(f, gh, ga);
-          fxState[ix] = { gh, ga };
+          fxState[ix] = { gh, ga, manual: false };
         });
         picks = {};
         render();
+        expandBracket();
       }
 
       /* ---- live polling (ESPN API) ---- */
@@ -2435,6 +2645,7 @@
         DATA.seed = live.seed;
         DATA.fixtures = live.fixtures;
         DATA.liveGames = live.liveGames || [];
+        DATA.playedMatches = live.playedMatches || [];
         lastStamp = live.stamp;
         $("#clock").textContent =
           "ao vivo " +
@@ -2481,6 +2692,7 @@
         hideLiveNotice();
         reset();
         render({ first: true });
+        collapseBracket();
         flashHint("voltou ao vivo");
       };
       $("#b-chaos").onclick = chaos;
@@ -2507,9 +2719,31 @@
 
       reset();
       render({ first: true });
+      updateToggleIcon();
       pull();
       setInterval(pull, 60000);
       setTimeout(drawWires, 60);
     </script>
+    <footer
+      style="
+        text-align: center;
+        padding: 28px 0 12px;
+        color: #577567;
+        font-family: ui-monospace, monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.12em;
+      "
+    >
+      Feito por
+      <a
+        href="https://instagram.com/arlen_cordeiro"
+        target="_blank"
+        rel="noopener"
+        style="color: #33e07d; text-decoration: none; font-weight: 700"
+      >
+        @arlen_cordeiro
+      </a>
+      · Copa 2026
+    </footer>
   </body>
 </html>
