@@ -700,17 +700,9 @@
       }
 
       .sim-cta {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
         margin: 0 0 10px;
         color: var(--muted);
         font-size: 12.5px;
-      }
-      .sim-cta .btn {
-        font-size: 11.5px;
-        padding: 7px 11px;
       }
       .fixwrap {
         max-height: 320px;
@@ -952,9 +944,6 @@
 
       <div class="controls">
         <button class="btn primary" id="b-reset">↺ Voltar ao agora</button>
-        <button class="btn" id="b-chaos">
-          ⚡ Simular o resto <span class="k">jogos reais, aleatório</span>
-        </button>
         <button class="btn" id="b-toggle-ko" onclick="toggleBracket()">
           + Quartas, semi e final
         </button>
@@ -1010,11 +999,8 @@
             <span class="meta">resolva → vira a chave</span>
           </div>
           <p class="sim-cta">
-            Preencha o placar de cada jogo abaixo
-            <b>ou</b> simule os que faltam de uma vez →
-            <button class="btn primary" onclick="chaos()">
-              ⚡ Simular agora
-            </button>
+            Preencha o placar de cada jogo abaixo e veja como fica o
+            chaveamento com as suas próprias suposições →
           </p>
           <div class="fixwrap" id="fixtures"></div>
         </div>
@@ -2104,9 +2090,6 @@
           requestAnimationFrame(drawWires);
         }
       }
-      function expandBracket(opts) {
-        setBracketExpanded(true, opts);
-      }
       function collapseBracket(opts) {
         setBracketExpanded(false, opts);
       }
@@ -2447,12 +2430,15 @@
         }
 
         // ── jogos futuros (editáveis via placar) ──
+        // agrupa pelo dia LOCAL do usuário, não pelo dia UTC do feed — um jogo
+        // às 22h de 22/06 UTC pode cair em 21/06 no fuso de quem está vendo
         let lastDay = "";
         DATA.fixtures.forEach((f, ix) => {
-          if (f.date !== lastDay) {
-            lastDay = f.date;
+          const dayKey = localDayKey(f);
+          if (dayKey !== lastDay) {
+            lastDay = dayKey;
             const d = ce("div", "fxday");
-            d.textContent = fmtDay(f.date);
+            d.textContent = fmtDay(f);
             host.appendChild(d);
           }
           const st = fxState[ix];
@@ -2511,9 +2497,25 @@
           host.appendChild(fx);
         });
       }
-      function fmtDay(s) {
-        const [y, m, d] = s.split("-");
-        return `${d}/${m}`;
+      // dia local do navegador para um jogo (usa o horário real quando disponível,
+      // já que o "date" do feed vem fatiado em UTC e pode cair num dia diferente)
+      function localDayKey(f) {
+        const d = f.time ? new Date(f.time) : new Date(f.date + "T00:00:00Z");
+        return (
+          d.getFullYear() +
+          "-" +
+          String(d.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(d.getDate()).padStart(2, "0")
+        );
+      }
+      function fmtDay(f) {
+        const d = f.time ? new Date(f.time) : new Date(f.date + "T00:00:00Z");
+        return (
+          String(d.getDate()).padStart(2, "0") +
+          "/" +
+          String(d.getMonth() + 1).padStart(2, "0")
+        );
       }
       function fmtTime(t) {
         if (!t) return "";
@@ -2570,43 +2572,6 @@
           S[f.h].d--;
           S[f.a].d--;
         }
-      }
-
-      /* distribuição de gols por placar (mais peso em placares baixos) */
-      function simGoals() {
-        const w = [0.35, 0.3, 0.2, 0.1, 0.05];
-        let x = Math.random(),
-          acc = 0;
-        for (let i = 0; i < w.length; i++) {
-          acc += w[i];
-          if (x < acc) return i;
-        }
-        return w.length - 1;
-      }
-      /* resultado ponderado: vitória A 38% · empate 26% · vitória B 36% (seção 2.3 do briefing) */
-      function simResult() {
-        const r = Math.random();
-        const outcome = r < 0.38 ? "h" : r < 0.64 ? "d" : "a";
-        let gh = simGoals(),
-          ga = simGoals();
-        if (outcome === "h" && gh <= ga) gh = ga + 1;
-        else if (outcome === "a" && ga <= gh) ga = gh + 1;
-        else if (outcome === "d" && gh !== ga) ga = gh;
-        return [gh, ga];
-      }
-      /* simula só os jogos sem placar manual — preserva o que o usuário já preencheu */
-      function chaos() {
-        dirty = true;
-        DATA.fixtures.forEach((f, ix) => {
-          if (fxState[ix] && fxState[ix].manual) return;
-          if (fxState[ix]) undoFix(f, fxState[ix]);
-          const [gh, ga] = simResult();
-          doFix(f, gh, ga);
-          fxState[ix] = { gh, ga, manual: false };
-        });
-        picks = {};
-        render();
-        expandBracket();
       }
 
       /* ---- live polling (ESPN API) ---- */
@@ -2695,7 +2660,6 @@
         collapseBracket();
         flashHint("voltou ao vivo");
       };
-      $("#b-chaos").onclick = chaos;
       function flashHint(t) {
         $("#changed-hint").textContent = t;
         clearTimeout(window._ht);
